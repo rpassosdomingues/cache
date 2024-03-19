@@ -22,5 +22,13 @@ public class GuestTest {
 
         Date date = new Date();
         ArrayList list = new ArrayList();
+
+        Guest francisco = new Guest();
+        francisco.setName("Francisco");
+        francisco.setLastName("Ribeiro");
+
+        Guest maria = new Guest();
+        maria.name = "Maria";
+        maria.lastName = "da Silva";
     }
 }

@@ -1,6 +1,6 @@
 import java.util.*;
 /***
- * @author: Rafael Domingues 
+ * @author Rafael Domingues 
  */
 public class GuestTest {
     public static void main(String[] args) {
@@ -22,5 +22,9 @@ public class GuestTest {
 
         Date date = new Date();
         ArrayList list = new ArrayList();
+
+        Guest francisco = new Guest();
+        francisco.setName("Francisco");
+        francisco.setLastName("Silva");
     }
 }

@@ -2,8 +2,8 @@
  * @author Rafael Domingues
  */
 public class Guest {
-    private String name;
-    private String lastName;
+    String name;
+    String lastName;
 
     // Constructor
     public Guest() {

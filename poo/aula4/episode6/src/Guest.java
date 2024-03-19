@@ -1,5 +1,5 @@
 /***
- * @author: Rafael Domingues
+ * @author Rafael Domingues
  */
 public class Guest {
     public String name;
