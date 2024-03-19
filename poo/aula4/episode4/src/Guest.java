@@ -2,7 +2,7 @@
  * @author: Rafael Domingues
  */
 public class Guest {
-    public String name;
+    private String name;
     private String lastName;
 
     // Constructor
