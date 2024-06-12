@@ -40,7 +40,7 @@ public class Caneta {
     // Método -- ESCREVER --
     public void escrever (String texto) {
         if (tintaRestante > 0) {
-            System.out.println("Escrevendo em " + cor + "com ponta" + ponta + ":" + texto);
+            System.out.println("Escrevendo em " + cor + " com ponta " + ponta + ": " + texto);
             tintaRestante -= texto.length();
         } else {
             System.out.println("Caneta sem tinta! Tinta restante: " + tintaRestante);
