@@ -1,46 +1,45 @@
 /**
  * ==================================================
- *       -- Criando e Usando o Objeto Caneta --
+ *       -- Aplicando Herança no Main --
  * --------------------------------------------------
- * Last Update: Jun 11 Tue
+ * Last Update: Jun 13 Thu
  * By Rafael Passos Domingues
  * ==================================================
  * 
- * - A classe Main contém o método main onde criamos e utilizamos o objeto Caneta.
- * - Criamos um objeto canetaAzul usando o construtor e definimos suas propriedades.
- * - Chamamos o método escrever para fazer a caneta escrever um texto.
- * - Chamamos o método mostrarTintaRestante para verificar a quantidade de tinta restante.
- * - Modificamos a cor da caneta usando o setter setCor.
- * - Chamamos o método escrever novamente com outro texto.
- * - Verificamos a tinta restante mais uma vez.
+ * Explicação:
  * 
- * Este exemplo demonstra os conceitos básicos de classes, propriedades, métodos e objetos em Java.
+ * > Criamos um objeto canetaTinteiro da classe CanetaTinteiro.
+ * > Tentamos escrever inicialmente, mas a tampa está fechada (vide saída do console).
+ * > Abrimos a tampa usando canetaTinteiro.abrirTampa().
+ * > Agora a escrita é permitida e a tinta específica da caneta tinteiro é mencionada na saída.
+ * > Verificamos a tinta restante usando o método herdado da classe base (mostrarTintaRestante). 
  * 
- * Na programação real, as classes podem ser bem mais complexas,
- * com diversas propriedades, métodos e hierarquias de herança.
+ * Benefícios da Herança:
  * 
- * É importante seguir boas práticas de programação,
- * como utilizar getters e setters para acessar e modificar propriedades,
- * e documentar o código para facilitar a compreensão.
+ * - Reutilização de Código: A classe CanetaTinteiro reaproveita as propriedades e métodos da classe base
+ * Caneta, evitando duplicação de código.
+ * 
+ * - Extensibilidade: O conceito de herança permite criar facilmente novas classes especializadas.
+ * como (canetaTinteiro) que herdam características de classes genéricas (Caneta).
+ * 
+ * - Relação "é um": A classe CanetaTinteiro é um tipo de Caneta, demonstrando a relação hierárquica entre
+ * as classes.
 */
 public class Main {
     public static void main (String[] args) {
-        // Criando um objeto caneta azul com ponta 0.5 e 100 de tinta
-        Caneta canetaAzul = new Caneta ("Azul", 0.5f, 100);
+        // Criando um objeto caneta tinteiro azul com ponta 0.7 e tinta preta.
+        CanetaTinteiro canetaTinteiro = new CanetaTinteiro("Azul", 0.7f, 50, "Preta");
 
-        // Fazendo a caneta escrever um texto
-        canetaAzul.escrever("Hello World!");
+        // Tentando escrever (tampa fechada)
+        canetaTinteiro.escrever("Hello, World!");
 
-        // Mostrando a tinta restante
-        canetaAzul.mostrarTintaRestante();
+        // Abrindo a tampa
+        canetaTinteiro.abrirTampa();
 
-        // Mudando a cor da caneta para verde
-        canetaAzul.setCor("Verde");
-
-        // Fazendo a caneta escrever outro texto
-        canetaAzul.escrever("Escrevendo em verde!");
+        // Escrevendo novamente
+        canetaTinteiro.escrever("Escrevendo com caneta tinteiro!");
 
         // Mostrando a tinta restante
-        canetaAzul.mostrarTintaRestante();
+        canetaTinteiro.mostrarTintaRestante();
     }
 }
