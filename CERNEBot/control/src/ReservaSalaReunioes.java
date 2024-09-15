@@ -1,51 +1,51 @@
-import java.time.LocalDateTime;
+package control;
+
+import java.time.LocalDateTime; // Importação necessária
 import java.time.LocalTime;
 
-public class Reserva {
-    private LocalDateTime dataReserva;
-    private LocalTime horaInicio;
-    private LocalTime horaFim;
-    private String solicitante;
-    private String status;
+public class ReservaSalaReunioes extends Reserva {
+    @Override
+    public String getTipoReserva() {
+        return "Sala de Reuniões";
+    }
+    private int numeroPessoas;
+    private boolean necessitaProjetor;
+
+    // Construtor
+    public ReservaSalaReunioes(String solicitante, LocalDateTime dataReserva, LocalTime horaInicio,
+                               LocalTime horaFim, String status, String descricao, int numeroPessoas, boolean necessitaProjetor) {
+        super(solicitante, dataReserva, horaInicio, horaFim, status, descricao); // Chama o construtor da superclasse
+        this.numeroPessoas = numeroPessoas;
+        this.necessitaProjetor = necessitaProjetor;
+    }
 
     // Getters e Setters
-    public LocalDateTime getDataReserva() {
-        return dataReserva;
+    public int getNumeroPessoas() {
+        return numeroPessoas;
     }
 
-    public void setDataReserva(LocalDateTime dataReserva) {
-        this.dataReserva = dataReserva;
+    public void setNumeroPessoas(int numeroPessoas) {
+        this.numeroPessoas = numeroPessoas;
     }
 
-    public LocalTime getHoraInicio() {
-        return horaInicio;
+    public boolean isNecessitaProjetor() {
+        return necessitaProjetor;
     }
 
-    public void setHoraInicio(LocalTime horaInicio) {
-        this.horaInicio = horaInicio;
+    public void setNecessitaProjetor(boolean necessitaProjetor) {
+        this.necessitaProjetor = necessitaProjetor;
     }
 
-    public LocalTime getHoraFim() {
-        return horaFim;
-    }
-
-    public void setHoraFim(LocalTime horaFim) {
-        this.horaFim = horaFim;
-    }
-
-    public String getSolicitante() {
-        return solicitante;
-    }
-
-    public void setSolicitante(String solicitante) {
-        this.solicitante = solicitante;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    // Método para exibir informações da reserva
+    public void exibirInformacoes() {
+        System.out.println("Dados da Reserva de Sala de Reuniões:");
+        System.out.println("Data da Reserva: " + getDataReserva());
+        System.out.println("Hora de Início: " + getHoraInicio());
+        System.out.println("Hora de Fim: " + getHoraFim());
+        System.out.println("Solicitante: " + getSolicitante());
+        System.out.println("Status: " + getStatus());
+        System.out.println("Descrição: " + getDescricao()); // Adicionando a descrição
+        System.out.println("Número de Pessoas: " + numeroPessoas);
+        System.out.println("Necessita Projetor: " + necessitaProjetor);
     }
 }
