@@ -60,7 +60,7 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    main.cadastrarProjeto(scanner);
+                    main.cadastrarProjeto(scanner); // Chama o metodo de instância diretamente
                     break;
                 case 2:
                     main.cadastrarEvento(scanner);
@@ -97,7 +97,8 @@ public class Main {
         scanner.close();
     }
 
-    // Métodos de cadastro
+    // Metodos de cadastro
+    // Método para cadastrar um projeto
     private void cadastrarProjeto(Scanner scanner) {
         System.out.print("Informe o nome do projeto: ");
         String nomeProjeto = scanner.nextLine();
@@ -106,42 +107,51 @@ public class Main {
         System.out.print("Informe a data de início do projeto (yyyy-mm-dd): ");
         String dataInicioProjeto = scanner.nextLine();
 
+        // Criação do objeto Projeto
         Projeto projeto = new Projeto(nomeProjeto, descricaoProjeto, dataInicioProjeto);
-        projetos.add(projeto);
-        System.out.println("Projeto cadastrado com sucesso!");
+
+        // Chamar o método estático para cadastrar o projeto
+        Projeto.cadastrarProjeto(projeto);
     }
 
     private void cadastrarEvento(Scanner scanner) {
         System.out.print("Informe o nome do evento: ");
-        String nomeEvento = scanner.nextLine();
-        
+        String nomeEvento = scanner.nextLine(); // Usando a entrada do usuário
+
         System.out.print("Informe os detalhes do evento: ");
-        String detalhesEvento = scanner.nextLine();
-        
+        String detalhesEvento = scanner.nextLine(); // Detalhes do evento
+
         System.out.print("Informe a data do evento (yyyy-MM-dd): ");
-        String dataEvento = scanner.nextLine();
-        
+        String dataEvento = scanner.nextLine(); // Data do evento
+
         System.out.print("Informe a hora de início do evento (HH:mm): ");
-        String horaInicioEvento = scanner.nextLine();
-        
+        String horaInicioEvento = scanner.nextLine(); // Hora de início
+
         System.out.print("Informe a hora de fim do evento (HH:mm): ");
-        String horaFimEvento = scanner.nextLine();
-        
+        String horaFimEvento = scanner.nextLine(); // Hora de fim
+
         System.out.print("Informe o local do evento: ");
-        String localEvento = scanner.nextLine();
-        
+        String localEvento = scanner.nextLine(); // Local do evento
+
         System.out.print("Informe o número de participantes: ");
-        int numeroParticipantes = scanner.nextInt();
-        scanner.nextLine(); 
-        
+        int numeroParticipantes = scanner.nextInt(); // Número de participantes
+        scanner.nextLine(); // Consumir a nova linha
+
         System.out.print("Informe o responsável pelo evento: ");
-        String responsavelEvento = scanner.nextLine();
-        
-        LocalDate dia = LocalDate.parse(dataEvento);
-        LocalTime horarioInicio = LocalTime.parse(horaInicioEvento);
-        LocalTime horarioTermino = LocalTime.parse(horaFimEvento);
-        
-        Evento evento = new Evento(nomeEvento, detalhesEvento, dia, horarioInicio, horarioTermino, localEvento, numeroParticipantes, responsavelEvento);
+        String responsavelEvento = scanner.nextLine(); // Responsável pelo evento
+
+        // Conversão de dados para tipos adequados
+        LocalDate dia = LocalDate.parse(dataEvento); // Data do evento
+        LocalTime horarioInicio = LocalTime.parse(horaInicioEvento); // Hora de início
+        LocalTime horarioTermino = LocalTime.parse(horaFimEvento); // Hora de término
+
+        // Inicialização de outras variáveis que não precisam ser fixas
+        String nomeProjeto = "Projeto Exemplo"; // Ou pode ser uma entrada do usuário
+        String acaoExecutada = "Execução do evento"; // Ou outra lógica que você desejar
+        String assunto = detalhesEvento; // Usando detalhes como assunto
+
+        // Criar o evento
+        Evento evento = new Evento(nomeProjeto, acaoExecutada, nomeEvento, localEvento, dia, horarioInicio, horarioTermino, assunto);
         eventos.add(evento);
         System.out.println("Evento cadastrado com sucesso!");
     }
@@ -235,16 +245,16 @@ public class Main {
     private void cadastrarReserva(Scanner scanner) {
         System.out.print("Escolha o tipo de reserva (1 - Sala de Reuniões, 2 - Coworking): ");
         int tipoReservaEscolha = scanner.nextInt();
-        scanner.nextLine(); 
+        scanner.nextLine();
 
         System.out.print("Informe o nome do solicitante: ");
         String solicitante = scanner.nextLine();
 
-        System.out.print("Informe a data e hora de início (yyyy-mm-dd hh:mm): ");
+        System.out.print("Informe a data e hora de início (yyyy-MM-dd HH:mm): ");
         String inicioInput = scanner.nextLine();
         LocalDateTime dataHoraInicio = LocalDateTime.parse(inicioInput.replace(" ", "T"));
 
-        System.out.print("Informe a data e hora de fim (yyyy-mm-dd hh:mm): ");
+        System.out.print("Informe a data e hora de fim (yyyy-MM-dd HH:mm): ");
         String fimInput = scanner.nextLine();
         LocalDateTime dataHoraFim = LocalDateTime.parse(fimInput.replace(" ", "T"));
 
@@ -263,16 +273,29 @@ public class Main {
     private void cadastrarReservaSalaReunioes(Scanner scanner, String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
         System.out.print("Informe o número de pessoas: ");
         int numeroPessoas = scanner.nextInt();
-        scanner.nextLine(); 
-        reservas.add(new ReservaSalaReunioes(solicitante, dataHoraInicio, dataHoraFim, numeroPessoas));
+        scanner.nextLine();
+
+        System.out.print("Necessita transmissão? (true/false): ");
+        boolean necessitaTransmissao = scanner.nextBoolean();
+        scanner.nextLine();
+
+        reservas.add(new ReservaSalaReunioes(solicitante, dataHoraInicio, dataHoraFim, "Reserva de sala de reuniões", numeroPessoas, necessitaTransmissao));
         System.out.println("Reserva de sala de reuniões cadastrada com sucesso!");
     }
 
     private void cadastrarReservaCoworking(Scanner scanner, String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
         System.out.print("Informe o número de mesas: ");
         int numeroMesas = scanner.nextInt();
-        scanner.nextLine(); 
-        reservas.add(new ReservaCoworking(solicitante, dataHoraInicio, dataHoraFim, numeroMesas));
+        scanner.nextLine();
+
+        System.out.print("Necessita projetor? (true/false): ");
+        boolean necessitaProjetor = scanner.nextBoolean();
+        scanner.nextLine();
+
+        // Passa a descrição correta para o construtor
+        String descricaoReserva = "Reserva de coworking para " + numeroMesas + " mesas";
+
+        reservas.add(new ReservaCoworking(solicitante, dataHoraInicio, dataHoraFim, descricaoReserva, necessitaProjetor));
         System.out.println("Reserva de coworking cadastrada com sucesso!");
     }
 }

@@ -1,31 +1,55 @@
 package control;
 
+import java.time.LocalDate; // Importar para usar LocalDate
+import java.time.format.DateTimeFormatter; // Importar para formatação de data
+import java.util.ArrayList; // Importar ArrayList
+import java.util.List; // Importar List
+
 public class Projeto {
     private String nomeProjeto;
     private String descricao;
-    private String dataInicio;
+    private LocalDate dataInicio; // Usar LocalDate diretamente
+
+    // Lista estática para armazenar projetos
+    private static List<Projeto> projetos = new ArrayList<>();
 
     // Construtor com nome, descrição e data de início
-    public Projeto(String nomeProjeto, String descricao, String dataInicio) {
+    public Projeto(String nomeProjeto, String descricao, String dataInicioInput) {
         this.nomeProjeto = nomeProjeto;
         this.descricao = descricao;
-        this.dataInicio = dataInicio;
+
+        // Converter a string da data para LocalDate
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Formato esperado
+        this.dataInicio = LocalDate.parse(dataInicioInput, formatter); // Converte para LocalDate
     }
 
+    // Metodo para adicionar projeto à lista
+    public static void cadastrarProjeto(Projeto projeto) {
+        projetos.add(projeto); // Adiciona o projeto à lista
+        System.out.println("Projeto cadastrado com sucesso!");
+    }
+
+    // Getters
     public String getNomeProjeto() {
         return nomeProjeto;
     }
 
-    public void cadastrarProjeto(Projeto projeto) {
-        projetos.add(projeto);
-        System.out.println("Projeto cadastrado com sucesso!");
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void agendarReuniao(String data, String horario) {
-        System.out.println("Reunião agendada para o projeto '" + nomeProjeto + "' na data " + data + " às " + horario);
+    public LocalDate getDataInicio() {
+        return dataInicio; // Retorna a data de início como LocalDate
     }
 
-    public void reservarSala(String data, String horarioInicio, String horarioTermino) {
-        System.out.println("Sala reservada para o projeto '" + nomeProjeto + "' na data " + data + ", das " + horarioInicio + " às " + horarioTermino);
+    // Metodo auxiliar para formatar a data
+    public String formatarData() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Formato desejado
+        return dataInicio.format(formatter); // Retorna a data formatada
+    }
+
+    // Metodo para listar todos os projetos (opcional)
+    public static List<Projeto> listarProjetos() {
+        return projetos;
     }
 }

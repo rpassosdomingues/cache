@@ -10,8 +10,8 @@ public abstract class Reserva {
     protected LocalDateTime dataHoraFim;
     protected String descricaoReserva;
 
-    // Lista estática para armazenar as reservas
-    protected static List<Reserva> reservas = new ArrayList<>();
+    // Lista privada para armazenar as reservas
+    private static List<Reserva> reservas = new ArrayList<>();
 
     public Reserva(String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim, String descricaoReserva) {
         this.solicitante = solicitante;
@@ -20,6 +20,7 @@ public abstract class Reserva {
         this.descricaoReserva = descricaoReserva;
     }
 
+    // Método para cadastrar a reserva
     public void cadastrarReserva() {
         reservas.add(this); // Adiciona a instância atual à lista de reservas
         System.out.println("Reserva cadastrada com sucesso!");
@@ -41,7 +42,7 @@ public abstract class Reserva {
         return descricaoReserva;
     }
 
-    // Método para obter todas as reservas
+    // Metodo para obter todas as reservas
     public static List<Reserva> getReservas() {
         return reservas;
     }

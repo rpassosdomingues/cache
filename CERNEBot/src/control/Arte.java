@@ -1,5 +1,7 @@
 package control;
 
+import java.time.LocalDate; // Importa a classe LocalDate
+import java.time.LocalTime; // Importa a classe LocalTime
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,13 +76,13 @@ public class Arte extends DICOM {
         this.legendaAnexo = legendaAnexo;
     }
 
-    // Método para adicionar um anexo de arte
+    // Metodo para adicionar um anexo de arte
     public void adicionarArteAnexo(String arte) {
         arteAnexo.add(arte);
         System.out.println("Anexo de arte adicionado com sucesso!");
     }
 
-    // Método para adicionar um anexo de legenda
+    // Metodo para adicionar um anexo de legenda
     public void adicionarLegendaAnexo(String legenda) {
         legendaAnexo.add(legenda);
         System.out.println("Anexo de legenda adicionado com sucesso!");

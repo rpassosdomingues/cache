@@ -1,6 +1,7 @@
 package control;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Monitoramento {
@@ -8,6 +9,9 @@ public class Monitoramento {
     private LocalDateTime dataHora;
     private List<String> documentosPendentes; // Lista de documentos pendentes
     private String arquivoExcel; // Nome ou caminho do arquivo Excel com dados de notas, evolução, etc.
+
+    // Lista estática para armazenar os monitoramentos
+    private static List<Monitoramento> monitoramentos = new ArrayList<>();
 
     // Construtor
     public Monitoramento(EmpresaIncubada empresaIncubada, LocalDateTime dataHora, List<String> documentosPendentes, String arquivoExcel) {

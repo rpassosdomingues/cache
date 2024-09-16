@@ -19,13 +19,13 @@ public class ReservaCoworking extends Reserva {
         return necessitaProjetor;
     }
 
-    // Método para cadastrar a reserva de coworking
+    // Metodo para cadastrar a reserva de coworking
     public void cadastrarReservaCoworking() {
         reservasCoworking.add(this); // Adiciona a instância atual à lista de reservas de coworking
         System.out.println("Reserva de coworking cadastrada com sucesso!");
     }
 
-    // Método para obter todas as reservas de coworking
+    // Metodo para obter todas as reservas de coworking
     public static List<ReservaCoworking> getReservasCoworking() {
         return reservasCoworking;
     }

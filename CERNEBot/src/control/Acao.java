@@ -1,17 +1,23 @@
 package control;
 
+import java.time.LocalDate; // Importar para usar LocalDate
+import java.time.format.DateTimeFormatter; // Importar para formatação de data
+
 public class Acao extends Projeto {
     private String local;
-    private String dia;
+    private LocalDate dia; // Declare a variável dia aqui
     private String horarioInicio;
     private String horarioTermino;
     private String assunto;
 
-    public Acao(String nomeProjeto, String acaoExecutada, String nomeEvento,
-                String local, String dia, String horarioInicio, String horarioTermino, String assunto) {
-        super(nomeProjeto, acaoExecutada, nomeEvento);
+    public Acao(String nomeProjeto, String descricao, String local, String diaInput,
+                String horarioInicio, String horarioTermino, String assunto) {
+        super(nomeProjeto, descricao, diaInput); // Passa a string diretamente para o construtor de Projeto
         this.local = local;
-        this.dia = dia;
+
+        // Armazenar a data como LocalDate
+        this.dia = LocalDate.parse(diaInput, DateTimeFormatter.ofPattern("yyyy-MM-dd")); // Converter diaInput para LocalDate
+
         this.horarioInicio = horarioInicio;
         this.horarioTermino = horarioTermino;
         this.assunto = assunto;
@@ -26,12 +32,13 @@ public class Acao extends Projeto {
         this.local = local;
     }
 
-    public String getDia() {
-        return dia;
+    public LocalDate getDia() {
+        return dia; // Retorna o dia como LocalDate
     }
 
-    public void setDia(String dia) {
-        this.dia = dia;
+    public void setDia(String diaInput) {
+        // Aceita uma string e converte para LocalDate
+        this.dia = LocalDate.parse(diaInput, DateTimeFormatter.ofPattern("yyyy-MM-dd")); // Converte e armazena
     }
 
     public String getHorarioInicio() {

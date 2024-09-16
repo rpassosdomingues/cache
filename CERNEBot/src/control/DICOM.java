@@ -1,5 +1,7 @@
 package control;
 
+import java.time.LocalDate; // Importa a classe LocalDate
+import java.time.LocalTime; // Importa a classe LocalTime
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class DICOM extends Evento {
         this.anexo = anexo;
     }
 
-    // Método para adicionar um anexo
+    // Metodo para adicionar um anexo
     public void adicionarAnexo(String foto) {
         anexo.add(foto);
         System.out.println("Anexo adicionado com sucesso!");

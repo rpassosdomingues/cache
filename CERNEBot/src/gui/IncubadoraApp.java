@@ -64,7 +64,14 @@ public class IncubadoraApp extends Application {
                 Optional<String> dataInicioProjeto = dialog.showAndWait();
 
                 if (dataInicioProjeto.isPresent() && !dataInicioProjeto.get().isEmpty()) {
-                    mainController.cadastrarProjeto(new Projeto(nomeProjeto.get(), descricaoProjeto.get(), dataInicioProjeto.get()));
+                    try {
+                        Projeto projeto = new Projeto(nomeProjeto.get(), descricaoProjeto.get(), dataInicioProjeto.get());
+                        mainController.cadastrarProjeto(projeto);
+                    } catch (DateTimeParseException e) {
+                        showAlert("Data de início inválida. Por favor, use o formato yyyy-mm-dd.");
+                    } catch (Exception e) {
+                        showAlert("Erro ao cadastrar o projeto: " + e.getMessage());
+                    }
                 } else {
                     showAlert("Data de início não pode ser vazia.");
                 }
