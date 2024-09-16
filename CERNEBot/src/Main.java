@@ -1,7 +1,5 @@
-package control;
-
-import gui.IncubadoraApp;
-import javafx.application.Application;
+import control.*;
+import gui.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,8 +2,6 @@ package gui;
 
 import control.Main;
 import control.Projeto;
-import control.Reserva;
-import control.SolicitacaoPecas;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
