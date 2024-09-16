@@ -1,3 +1,4 @@
+package control;
 package gui;
 
 import control.Main;

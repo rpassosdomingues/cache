@@ -1,9 +1,9 @@
 package control;
+package gui;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Scanner;
 
 public class Main {
