@@ -17,6 +17,11 @@ public class Monitoramento {
         this.arquivoExcel = arquivoExcel;
     }
 
+    public void cadastrarMonitoramento(Monitoramento monitoramento) {
+        monitoramentos.add(monitoramento);
+        System.out.println("Monitoramento cadastrado com sucesso!");
+    }
+
     // Getters
     public EmpresaIncubada getEmpresaIncubada() {
         return empresaIncubada;

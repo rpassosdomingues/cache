@@ -16,6 +16,11 @@ public class Projeto {
         return nomeProjeto;
     }
 
+    public void cadastrarProjeto(Projeto projeto) {
+        projetos.add(projeto);
+        System.out.println("Projeto cadastrado com sucesso!");
+    }
+
     public void agendarReuniao(String data, String horario) {
         System.out.println("Reunião agendada para o projeto '" + nomeProjeto + "' na data " + data + " às " + horario);
     }

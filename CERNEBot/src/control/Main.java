@@ -14,14 +14,14 @@ import java.util.Scanner;
 
 public class Main {
     private List<Projeto> projetos;
-    private List<Evento> eventos;  // Correção: tipo deve ser Evento
+    private List<Evento> eventos;  
     private List<Monitoramento> monitoramentos;
     private List<GestaoEstrategica> gestoesEstrategicas;
     private List<AmbienteIdeacao> ambientesIdeacao;
     private List<GestaoAmbiental> gestoesAmbientais;
     private List<ResponsabilidadeSocial> responsabilidadesSociais;
     private List<Internacionalizacao> internacionalizacoes;
-    private List<Reserva> reservas; // Correção: reservas deve ser uma lista
+    private List<Reserva> reservas; 
 
     // Construtor
     public Main() {
@@ -33,7 +33,7 @@ public class Main {
         gestoesAmbientais = new ArrayList<>();
         responsabilidadesSociais = new ArrayList<>();
         internacionalizacoes = new ArrayList<>();
-        reservas = new ArrayList<>(); // Inicialização correta
+        reservas = new ArrayList<>(); 
     }
 
     // Método principal
@@ -43,7 +43,7 @@ public class Main {
         boolean continuar = true;
 
         while (continuar) {
-            System.out.println("\nMenu:");
+            System.out.println("\nMenu Principal:");
             System.out.println("1. Cadastrar Projeto");
             System.out.println("2. Cadastrar Evento");
             System.out.println("3. Cadastrar Monitoramento");
@@ -56,157 +56,35 @@ public class Main {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             int opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpa o buffer
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1:
-                    System.out.print("Informe o nome do projeto: ");
-                    String nomeProjeto = scanner.nextLine();
-                    System.out.print("Informe a descrição do projeto: ");
-                    String descricaoProjeto = scanner.nextLine();
-                    System.out.print("Informe a data de início do projeto (yyyy-mm-dd): ");
-                    String dataInicioProjeto = scanner.nextLine();
-
-                    main.cadastrarProjeto(new Projeto(nomeProjeto, descricaoProjeto, dataInicioProjeto));
+                    main.cadastrarProjeto(scanner);
                     break;
                 case 2:
-                    System.out.print("Informe o nome do evento: ");
-                    String nomeEvento = scanner.nextLine();
-                    System.out.print("Informe os detalhes do evento: ");
-                    String detalhesEvento = scanner.nextLine();
-                    System.out.print("Informe a data do evento (yyyy-mm-dd): ");
-                    String dataEvento = scanner.nextLine();
-                    System.out.print("Informe a hora de início do evento (hh:mm): ");
-                    String horaInicioEvento = scanner.nextLine();
-                    System.out.print("Informe a hora de fim do evento (hh:mm): ");
-                    String horaFimEvento = scanner.nextLine();
-                    System.out.print("Informe o local do evento: ");
-                    String localEvento = scanner.nextLine();
-                    System.out.print("Informe o número de participantes: ");
-                    int numeroParticipantes = scanner.nextInt();
-                    scanner.nextLine(); // Limpa o buffer
-                    System.out.print("Informe o responsável pelo evento: ");
-                    String responsavelEvento = scanner.nextLine();
-
-                    // Converter data e horas para os tipos adequados
-                    LocalDate dia = LocalDate.parse(dataEvento);
-                    LocalTime horarioInicio = LocalTime.parse(horaInicioEvento);
-                    LocalTime horarioTermino = LocalTime.parse(horaFimEvento);
-
-                    // Criar o objeto Evento com todos os parâmetros necessários
-                    Evento evento = new Evento(nomeEvento, detalhesEvento, dia, horarioInicio, horarioTermino, localEvento, numeroParticipantes, responsavelEvento);
-
-                    // Aqui você pode cadastrar o evento, por exemplo, em uma lista ou banco de dados
-                    cadastrarEvento(evento);
+                    main.cadastrarEvento(scanner);
                     break;
                 case 3:
-                    System.out.print("Escolha a empresa incubada (1 - Polygon, 2 - ICRO Digital, 3 - SMARTComerci, 4 - iLegis): ");
-                    int escolhaEmpresa = scanner.nextInt();
-                    scanner.nextLine(); // Limpa o buffer
-                    EmpresaIncubada empresaSelecionada = null;
-
-                    switch (escolhaEmpresa) {
-                        case 1:
-                            empresaSelecionada = EmpresaIncubada.POLYGON;
-                            break;
-                        case 2:
-                            empresaSelecionada = EmpresaIncubada.ICRO_DIGITAL;
-                            break;
-                        case 3:
-                            empresaSelecionada = EmpresaIncubada.SMARTCOMERCI;
-                            break;
-                        case 4:
-                            empresaSelecionada = EmpresaIncubada.ILEGIS;
-                            break;
-                        default:
-                            System.out.println("Opção inválida. Tente novamente.");
-                            continue; // Retorna ao início do loop
-                    }
-
-                    System.out.print("Informe a data e hora do monitoramento (yyyy-mm-dd hh:mm): ");
-                    String dataHoraInput = scanner.nextLine();
-                    LocalDateTime dataHora = LocalDateTime.parse(dataHoraInput.replace(" ", "T")); // Formato correto para LocalDateTime
-
-                    System.out.print("Informe os documentos pendentes (separados por vírgula): ");
-                    String documentosInput = scanner.nextLine();
-                    List<String> documentosPendentes = List.of(documentosInput.split(",")); // Converte para lista
-
-                    System.out.print("Informe o caminho do arquivo Excel: ");
-                    String arquivoExcel = scanner.nextLine();
-
-                    // Cadastrar o monitoramento
-                    main.cadastrarMonitoramento(new Monitoramento(empresaSelecionada, dataHora, documentosPendentes, arquivoExcel));
+                    main.cadastrarMonitoramento(scanner);
                     break;
                 case 4:
-                    System.out.print("Informe o objetivo da gestão estratégica: ");
-                    String objetivoGestao = scanner.nextLine();
-                    main.cadastrarGestaoEstrategica(new GestaoEstrategica(objetivoGestao));
+                    main.cadastrarGestaoEstrategica(scanner);
                     break;
                 case 5:
-                    System.out.print("Informe o nome do ambiente de ideação: ");
-                    String nomeAmbiente = scanner.nextLine();
-                    main.cadastrarAmbienteIdeacao(new AmbienteIdeacao(nomeAmbiente));
+                    main.cadastrarAmbienteIdeacao(scanner);
                     break;
                 case 6:
-                    System.out.print("Informe a ação da gestão ambiental: ");
-                    String acaoGestao = scanner.nextLine();
-                    System.out.print("Informe o impacto da gestão ambiental: ");
-                    String impactoGestao = scanner.nextLine();
-                    main.cadastrarGestaoAmbiental(new GestaoAmbiental(acaoGestao, impactoGestao));
+                    main.cadastrarGestaoAmbiental(scanner);
                     break;
                 case 7:
-                    System.out.print("Informe o projeto social: ");
-                    String projetoSocial = scanner.nextLine();
-                    System.out.print("Informe o impacto do projeto social: ");
-                    String impactoSocial = scanner.nextLine();
-                    main.cadastrarResponsabilidadeSocial(new ResponsabilidadeSocial(projetoSocial, impactoSocial));
+                    main.cadastrarResponsabilidadeSocial(scanner);
                     break;
                 case 8:
-                    System.out.print("Informe o país: ");
-                    String pais = scanner.nextLine();
-                    System.out.print("Informe o projeto internacional: ");
-                    String projetoInternacional = scanner.nextLine();
-                    main.cadastrarInternacionalizacao(new Internacionalizacao(pais, projetoInternacional));
+                    main.cadastrarInternacionalizacao(scanner);
                     break;
                 case 9:
-                    System.out.print("Escolha o tipo de reserva (1 - Sala de Reuniões, 2 - Coworking): ");
-                    int tipoReservaEscolha = scanner.nextInt();
-                    scanner.nextLine(); // Limpa o buffer
-
-                    System.out.print("Informe o nome do solicitante: ");
-                    String solicitante = scanner.nextLine();
-                    System.out.print("Informe a data e hora de início da reserva (yyyy-mm-dd hh:mm): ");
-                    String dataHoraInicioInput = scanner.nextLine();
-                    LocalDateTime dataHoraInicio = LocalDateTime.parse(dataHoraInicioInput.replace(" ", "T"));
-                    System.out.print("Informe a data e hora de fim da reserva (yyyy-mm-dd hh:mm): ");
-                    String dataHoraFimInput = scanner.nextLine();
-                    LocalDateTime dataHoraFim = LocalDateTime.parse(dataHoraFimInput.replace(" ", "T"));
-
-                    if (tipoReservaEscolha == 1) {
-                        System.out.print("Informe a descrição da reserva: ");
-                        String descricaoReserva = scanner.nextLine();
-                        System.out.print("Informe o número de pessoas: ");
-                        int numeroPessoas = scanner.nextInt();
-                        scanner.nextLine(); // Limpa o buffer
-                        System.out.print("Necessita de transmissão (true/false): ");
-                        boolean necessitaTransmissao = scanner.nextBoolean();
-                        scanner.nextLine(); // Limpa o buffer
-
-                        ReservaSalaReunioes reservaSalaReunioes = new ReservaSalaReunioes(solicitante, dataHoraInicio, dataHoraFim, descricaoReserva, numeroPessoas, necessitaTransmissao);
-                        main.cadastrarReserva(reservaSalaReunioes);
-                    } else if (tipoReservaEscolha == 2) {
-                        // Para o coworking, você pode adicionar mais parâmetros, se necessário.
-                        System.out.print("Informe a descrição da reserva: ");
-                        String descricaoReserva = scanner.nextLine();
-                        System.out.print("Necessita de transmissão (true/false): ");
-                        boolean necessitaTransmissao = scanner.nextBoolean();
-                        scanner.nextLine(); // Limpa o buffer
-
-                        ReservaCoworking reservaCoworking = new ReservaCoworking(solicitante, dataHoraInicio, dataHoraFim, descricaoReserva, necessitaTransmissao);
-                        main.cadastrarReserva(reservaCoworking);
-                    } else {
-                        System.out.println("Tipo de reserva inválido.");
-                    }
+                    main.cadastrarReserva(scanner);
                     break;
                 case 0:
                     continuar = false;
@@ -219,48 +97,182 @@ public class Main {
         scanner.close();
     }
 
-    public void cadastrarProjeto(Projeto projeto) {
+    // Métodos de cadastro
+    private void cadastrarProjeto(Scanner scanner) {
+        System.out.print("Informe o nome do projeto: ");
+        String nomeProjeto = scanner.nextLine();
+        System.out.print("Informe a descrição do projeto: ");
+        String descricaoProjeto = scanner.nextLine();
+        System.out.print("Informe a data de início do projeto (yyyy-mm-dd): ");
+        String dataInicioProjeto = scanner.nextLine();
+
+        Projeto projeto = new Projeto(nomeProjeto, descricaoProjeto, dataInicioProjeto);
         projetos.add(projeto);
         System.out.println("Projeto cadastrado com sucesso!");
     }
 
-    public void cadastrarEvento(Evento evento) {
+    private void cadastrarEvento(Scanner scanner) {
+        System.out.print("Informe o nome do evento: ");
+        String nomeEvento = scanner.nextLine();
+        
+        System.out.print("Informe os detalhes do evento: ");
+        String detalhesEvento = scanner.nextLine();
+        
+        System.out.print("Informe a data do evento (yyyy-MM-dd): ");
+        String dataEvento = scanner.nextLine();
+        
+        System.out.print("Informe a hora de início do evento (HH:mm): ");
+        String horaInicioEvento = scanner.nextLine();
+        
+        System.out.print("Informe a hora de fim do evento (HH:mm): ");
+        String horaFimEvento = scanner.nextLine();
+        
+        System.out.print("Informe o local do evento: ");
+        String localEvento = scanner.nextLine();
+        
+        System.out.print("Informe o número de participantes: ");
+        int numeroParticipantes = scanner.nextInt();
+        scanner.nextLine(); 
+        
+        System.out.print("Informe o responsável pelo evento: ");
+        String responsavelEvento = scanner.nextLine();
+        
+        LocalDate dia = LocalDate.parse(dataEvento);
+        LocalTime horarioInicio = LocalTime.parse(horaInicioEvento);
+        LocalTime horarioTermino = LocalTime.parse(horaFimEvento);
+        
+        Evento evento = new Evento(nomeEvento, detalhesEvento, dia, horarioInicio, horarioTermino, localEvento, numeroParticipantes, responsavelEvento);
         eventos.add(evento);
         System.out.println("Evento cadastrado com sucesso!");
     }
 
-    public void cadastrarMonitoramento(Monitoramento monitoramento) {
+    private void cadastrarMonitoramento(Scanner scanner) {
+        System.out.print("Escolha a empresa incubada (1 - Polygon, 2 - ICRO Digital, 3 - SMARTComerci, 4 - iLegis): ");
+        int escolhaEmpresa = scanner.nextInt();
+        scanner.nextLine(); 
+        EmpresaIncubada empresaSelecionada = null;
+
+        switch (escolhaEmpresa) {
+            case 1:
+                empresaSelecionada = EmpresaIncubada.POLYGON;
+                break;
+            case 2:
+                empresaSelecionada = EmpresaIncubada.ICRO_DIGITAL;
+                break;
+            case 3:
+                empresaSelecionada = EmpresaIncubada.SMARTCOMERCI;
+                break;
+            case 4:
+                empresaSelecionada = EmpresaIncubada.ILEGIS;
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+                return; // Retorna ao início do método
+        }
+
+        System.out.print("Informe a data e hora do monitoramento (yyyy-mm-dd hh:mm): ");
+        String dataHoraInput = scanner.nextLine();
+        LocalDateTime dataHora = LocalDateTime.parse(dataHoraInput.replace(" ", "T"));
+
+        System.out.print("Informe os documentos pendentes (separados por vírgula): ");
+        String documentosInput = scanner.nextLine();
+        List<String> documentosPendentes = List.of(documentosInput.split(","));
+
+        System.out.print("Informe o caminho do arquivo Excel: ");
+        String arquivoExcel = scanner.nextLine();
+
+        Monitoramento monitoramento = new Monitoramento(empresaSelecionada, dataHora, documentosPendentes, arquivoExcel);
         monitoramentos.add(monitoramento);
         System.out.println("Monitoramento cadastrado com sucesso!");
     }
 
-    public void cadastrarGestaoEstrategica(GestaoEstrategica gestaoEstrategica) {
+    private void cadastrarGestaoEstrategica(Scanner scanner) {
+        System.out.print("Informe o objetivo da gestão estratégica: ");
+        String objetivoGestao = scanner.nextLine();
+        GestaoEstrategica gestaoEstrategica = new GestaoEstrategica(objetivoGestao);
         gestoesEstrategicas.add(gestaoEstrategica);
         System.out.println("Gestão Estratégica cadastrada com sucesso!");
     }
 
-    public void cadastrarAmbienteIdeacao(AmbienteIdeacao ambienteIdeacao) {
+    private void cadastrarAmbienteIdeacao(Scanner scanner) {
+        System.out.print("Informe o nome do ambiente de ideação: ");
+        String nomeAmbiente = scanner.nextLine();
+        AmbienteIdeacao ambienteIdeacao = new AmbienteIdeacao(nomeAmbiente);
         ambientesIdeacao.add(ambienteIdeacao);
         System.out.println("Ambiente de Ideação cadastrado com sucesso!");
     }
 
-    public void cadastrarGestaoAmbiental(GestaoAmbiental gestaoAmbiental) {
+    private void cadastrarGestaoAmbiental(Scanner scanner) {
+        System.out.print("Informe a ação da gestão ambiental: ");
+        String acaoGestao = scanner.nextLine();
+        System.out.print("Informe o impacto da gestão ambiental: ");
+        String impactoGestao = scanner.nextLine();
+        GestaoAmbiental gestaoAmbiental = new GestaoAmbiental(acaoGestao, impactoGestao);
         gestoesAmbientais.add(gestaoAmbiental);
         System.out.println("Gestão Ambiental cadastrada com sucesso!");
     }
 
-    public void cadastrarResponsabilidadeSocial(ResponsabilidadeSocial responsabilidadeSocial) {
+    private void cadastrarResponsabilidadeSocial(Scanner scanner) {
+        System.out.print("Informe o projeto social: ");
+        String projetoSocial = scanner.nextLine();
+        System.out.print("Informe o impacto do projeto social: ");
+        String impactoSocial = scanner.nextLine();
+        ResponsabilidadeSocial responsabilidadeSocial = new ResponsabilidadeSocial(projetoSocial, impactoSocial);
         responsabilidadesSociais.add(responsabilidadeSocial);
         System.out.println("Responsabilidade Social cadastrada com sucesso!");
     }
 
-    public void cadastrarInternacionalizacao(Internacionalizacao internacionalizacao) {
+    private void cadastrarInternacionalizacao(Scanner scanner) {
+        System.out.print("Informe o país: ");
+        String pais = scanner.nextLine();
+        System.out.print("Informe o projeto internacional: ");
+        String projetoInternacional = scanner.nextLine();
+        Internacionalizacao internacionalizacao = new Internacionalizacao(pais, projetoInternacional);
         internacionalizacoes.add(internacionalizacao);
         System.out.println("Internacionalização cadastrada com sucesso!");
     }
 
-    public void cadastrarReserva(Reserva reserva) {
-        reservas.add(reserva);
-        System.out.println("Reserva cadastrada com sucesso!");
+    private void cadastrarReserva(Scanner scanner) {
+        System.out.print("Escolha o tipo de reserva (1 - Sala de Reuniões, 2 - Coworking): ");
+        int tipoReservaEscolha = scanner.nextInt();
+        scanner.nextLine(); 
+
+        System.out.print("Informe o nome do solicitante: ");
+        String solicitante = scanner.nextLine();
+
+        System.out.print("Informe a data e hora de início (yyyy-mm-dd hh:mm): ");
+        String inicioInput = scanner.nextLine();
+        LocalDateTime dataHoraInicio = LocalDateTime.parse(inicioInput.replace(" ", "T"));
+
+        System.out.print("Informe a data e hora de fim (yyyy-mm-dd hh:mm): ");
+        String fimInput = scanner.nextLine();
+        LocalDateTime dataHoraFim = LocalDateTime.parse(fimInput.replace(" ", "T"));
+
+        switch (tipoReservaEscolha) {
+            case 1:
+                cadastrarReservaSalaReunioes(scanner, solicitante, dataHoraInicio, dataHoraFim);
+                break;
+            case 2:
+                cadastrarReservaCoworking(scanner, solicitante, dataHoraInicio, dataHoraFim);
+                break;
+            default:
+                System.out.println("Tipo de reserva inválido.");
+        }
+    }
+
+    private void cadastrarReservaSalaReunioes(Scanner scanner, String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+        System.out.print("Informe o número de pessoas: ");
+        int numeroPessoas = scanner.nextInt();
+        scanner.nextLine(); 
+        reservas.add(new ReservaSalaReunioes(solicitante, dataHoraInicio, dataHoraFim, numeroPessoas));
+        System.out.println("Reserva de sala de reuniões cadastrada com sucesso!");
+    }
+
+    private void cadastrarReservaCoworking(Scanner scanner, String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+        System.out.print("Informe o número de mesas: ");
+        int numeroMesas = scanner.nextInt();
+        scanner.nextLine(); 
+        reservas.add(new ReservaCoworking(solicitante, dataHoraInicio, dataHoraFim, numeroMesas));
+        System.out.println("Reserva de coworking cadastrada com sucesso!");
     }
 }

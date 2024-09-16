@@ -1,6 +1,8 @@
 package control;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Reserva {
     protected String solicitante;
@@ -8,11 +10,19 @@ public abstract class Reserva {
     protected LocalDateTime dataHoraFim;
     protected String descricaoReserva;
 
+    // Lista estática para armazenar as reservas
+    protected static List<Reserva> reservas = new ArrayList<>();
+
     public Reserva(String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim, String descricaoReserva) {
         this.solicitante = solicitante;
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFim = dataHoraFim;
         this.descricaoReserva = descricaoReserva;
+    }
+
+    public void cadastrarReserva() {
+        reservas.add(this); // Adiciona a instância atual à lista de reservas
+        System.out.println("Reserva cadastrada com sucesso!");
     }
 
     public String getSolicitante() {
@@ -29,5 +39,10 @@ public abstract class Reserva {
 
     public String getDescricaoReserva() {
         return descricaoReserva;
+    }
+
+    // Método para obter todas as reservas
+    public static List<Reserva> getReservas() {
+        return reservas;
     }
 }

@@ -2,6 +2,8 @@ package control;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Evento {
     private String nomeProjeto;
@@ -13,6 +15,10 @@ public class Evento {
     private LocalTime horarioTermino; // Altera para LocalTime
     private String assunto;
 
+    // Lista estática para armazenar todos os eventos
+    private static List<Evento> eventos = new ArrayList<>();
+
+    // Construtor
     public Evento(String nomeProjeto, String acaoExecutada, String nomeEvento, String local,
                   LocalDate dia, LocalTime horarioInicio, LocalTime horarioTermino, String assunto) {
         this.nomeProjeto = nomeProjeto;
@@ -23,6 +29,19 @@ public class Evento {
         this.horarioInicio = horarioInicio;
         this.horarioTermino = horarioTermino;
         this.assunto = assunto;
+    }
+
+    // Método para cadastrar um evento
+    public void cadastrarEvento() {
+        eventos.add(this);  // 'this' refere-se ao próprio objeto Evento
+        System.out.println("Evento cadastrado com sucesso!");
+    }
+
+    // Método para listar todos os eventos cadastrados
+    public static void listarEventos() {
+        for (Evento evento : eventos) {
+            System.out.println("Evento: " + evento.getNomeEvento() + ", Data: " + evento.getDia());
+        }
     }
 
     // Getters e Setters
