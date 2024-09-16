@@ -4,19 +4,22 @@ import java.time.LocalDateTime; // Importação necessária
 import java.time.LocalTime;
 
 public class ReservaSalaReunioes extends Reserva {
-    @Override
-    public String getTipoReserva() {
-        return "Sala de Reuniões";
-    }
+
     private int numeroPessoas;
-    private boolean necessitaProjetor;
+    private boolean necessitaTransmissao; // Alterado para necessitaTransmissao
 
     // Construtor
     public ReservaSalaReunioes(String solicitante, LocalDateTime dataReserva, LocalTime horaInicio,
-                               LocalTime horaFim, String status, String descricao, int numeroPessoas, boolean necessitaProjetor) {
+                               LocalTime horaFim, String status, String descricao, int numeroPessoas, boolean necessitaTransmissao) {
         super(solicitante, dataReserva, horaInicio, horaFim, status, descricao); // Chama o construtor da superclasse
         this.numeroPessoas = numeroPessoas;
-        this.necessitaProjetor = necessitaProjetor;
+        this.necessitaTransmissao = necessitaTransmissao;
+    }
+
+    // Sobrescrevendo o método getTipoReserva para especificar o tipo
+    @Override
+    public String getTipoReserva() {
+        return "Sala de Reuniões";
     }
 
     // Getters e Setters
@@ -28,24 +31,24 @@ public class ReservaSalaReunioes extends Reserva {
         this.numeroPessoas = numeroPessoas;
     }
 
-    public boolean isNecessitaProjetor() {
-        return necessitaProjetor;
+    public boolean isNecessitaTransmissao() {
+        return necessitaTransmissao;
     }
 
-    public void setNecessitaProjetor(boolean necessitaProjetor) {
-        this.necessitaProjetor = necessitaProjetor;
+    public void setNecessitaTransmissao(boolean necessitaTransmissao) {
+        this.necessitaTransmissao = necessitaTransmissao;
     }
 
     // Método para exibir informações da reserva
     public void exibirInformacoes() {
         System.out.println("Dados da Reserva de Sala de Reuniões:");
-        System.out.println("Data da Reserva: " + getDataReserva());
-        System.out.println("Hora de Início: " + getHoraInicio());
-        System.out.println("Hora de Fim: " + getHoraFim());
+        System.out.println("Data da Reserva: " + getDataHoraInicio()); // Supondo que este método exista
+        System.out.println("Hora de Início: " + getHoraInicio()); // Supondo que este método exista
+        System.out.println("Hora de Fim: " + getHoraFim()); // Supondo que este método exista
         System.out.println("Solicitante: " + getSolicitante());
         System.out.println("Status: " + getStatus());
-        System.out.println("Descrição: " + getDescricao()); // Adicionando a descrição
+        System.out.println("Descrição: " + getDescricaoReserva()); // Supondo que este método exista
         System.out.println("Número de Pessoas: " + numeroPessoas);
-        System.out.println("Necessita Projetor: " + necessitaProjetor);
+        System.out.println("Necessita Transmissão: " + necessitaTransmissao);
     }
 }

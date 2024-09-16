@@ -14,6 +14,7 @@ public class ReservaCoworking extends Reserva {
         this.computadores = computadores;
     }
 
+    // Sobrescreve o método getTipoReserva para especificar o tipo de reserva
     @Override
     public String getTipoReserva() {
         return "Coworking";
@@ -39,12 +40,12 @@ public class ReservaCoworking extends Reserva {
     // Método para exibir informações da reserva
     public void exibirInformacoes() {
         System.out.println("Dados da Reserva de Coworking:");
-        System.out.println("Data da Reserva: " + getDataHoraInicio()); // Use o método da classe pai
+        System.out.println("Data da Reserva: " + getDataHoraInicio());
         System.out.println("Hora de Início: " + getHoraInicio());
         System.out.println("Hora de Fim: " + getHoraFim());
         System.out.println("Solicitante: " + getSolicitante());
-        System.out.println("Status: " + status);
-        System.out.println("Número de Computadores Necessários: " + computadores);
-        System.out.println("Necessita Projetor: " + projetor);
+        System.out.println("Status: " + getStatus());
+        System.out.println("Número de Computadores Necessários: " + getComputadores());
+        System.out.println("Necessita Projetor: " + isProjetor());
     }
 }
