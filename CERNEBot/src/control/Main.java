@@ -1,35 +1,42 @@
 package control;
 
+import control.Evento;
+import control.Reserva;
+import control.ReservaSalaReunioes;
+import control.ReservaCoworking;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Scanner;
 
 public class Main {
     private List<Projeto> projetos;
-    private List<Marketing> campanhasMarketing;
+    private List<Evento> eventos;  // Correção: tipo deve ser Evento
     private List<Monitoramento> monitoramentos;
     private List<GestaoEstrategica> gestoesEstrategicas;
     private List<AmbienteIdeacao> ambientesIdeacao;
     private List<GestaoAmbiental> gestoesAmbientais;
     private List<ResponsabilidadeSocial> responsabilidadesSociais;
     private List<Internacionalizacao> internacionalizacoes;
-    private List<Reserva> reservas; // Alterado para uma lista genérica de reservas
+    private List<Reserva> reservas; // Correção: reservas deve ser uma lista
 
     // Construtor
     public Main() {
         projetos = new ArrayList<>();
-        campanhasMarketing = new ArrayList<>();
+        eventos = new ArrayList<>();
         monitoramentos = new ArrayList<>();
         gestoesEstrategicas = new ArrayList<>();
         ambientesIdeacao = new ArrayList<>();
         gestoesAmbientais = new ArrayList<>();
         responsabilidadesSociais = new ArrayList<>();
         internacionalizacoes = new ArrayList<>();
-        reservas = new ArrayList<>(); // Inicializa a lista de reservas
+        reservas = new ArrayList<>(); // Inicialização correta
     }
 
-    // Metodo principal
+    // Método principal
     public static void main(String[] args) {
         Main main = new Main();
         Scanner scanner = new Scanner(System.in);
@@ -81,8 +88,16 @@ public class Main {
                     System.out.print("Informe o responsável pelo evento: ");
                     String responsavelEvento = scanner.nextLine();
 
+                    // Converter data e horas para os tipos adequados
+                    LocalDate dia = LocalDate.parse(dataEvento);
+                    LocalTime horarioInicio = LocalTime.parse(horaInicioEvento);
+                    LocalTime horarioTermino = LocalTime.parse(horaFimEvento);
+
                     // Criar o objeto Evento com todos os parâmetros necessários
-                    main.cadastrarEvento(new Evento(nomeEvento, detalhesEvento, dataEvento, horaInicioEvento, horaFimEvento, localEvento, String.valueOf(numeroParticipantes), responsavelEvento));
+                    Evento evento = new Evento(nomeEvento, detalhesEvento, dia, horarioInicio, horarioTermino, localEvento, numeroParticipantes, responsavelEvento);
+
+                    // Aqui você pode cadastrar o evento, por exemplo, em uma lista ou banco de dados
+                    cadastrarEvento(evento);
                     break;
                 case 3:
                     System.out.print("Escolha a empresa incubada (1 - Polygon, 2 - ICRO Digital, 3 - SMARTComerci, 4 - iLegis): ");
@@ -135,23 +150,23 @@ public class Main {
                 case 6:
                     System.out.print("Informe a ação da gestão ambiental: ");
                     String acaoGestao = scanner.nextLine();
-                    System.out.print("Informe o impacto da gestão ambiental: "); // Add prompt for impacto
-                    String impactoGestao = scanner.nextLine(); // Get impacto input
-                    main.cadastrarGestaoAmbiental(new GestaoAmbiental(acaoGestao, impactoGestao)); // Pass both arguments
+                    System.out.print("Informe o impacto da gestão ambiental: ");
+                    String impactoGestao = scanner.nextLine();
+                    main.cadastrarGestaoAmbiental(new GestaoAmbiental(acaoGestao, impactoGestao));
                     break;
                 case 7:
                     System.out.print("Informe o projeto social: ");
                     String projetoSocial = scanner.nextLine();
-                    System.out.print("Informe o impacto do projeto social: "); // Add prompt for impacto
-                    String impactoSocial = scanner.nextLine(); // Get impacto input
-                    main.cadastrarResponsabilidadeSocial(new ResponsabilidadeSocial(projetoSocial, impactoSocial)); // Pass both arguments
+                    System.out.print("Informe o impacto do projeto social: ");
+                    String impactoSocial = scanner.nextLine();
+                    main.cadastrarResponsabilidadeSocial(new ResponsabilidadeSocial(projetoSocial, impactoSocial));
                     break;
                 case 8:
                     System.out.print("Informe o país: ");
                     String pais = scanner.nextLine();
-                    System.out.print("Informe o projeto internacional: "); // Add prompt for projetoInternacional
-                    String projetoInternacional = scanner.nextLine(); // Get projetoInternacional input
-                    main.cadastrarInternacionalizacao(new Internacionalizacao(pais, projetoInternacional)); // Pass both arguments
+                    System.out.print("Informe o projeto internacional: ");
+                    String projetoInternacional = scanner.nextLine();
+                    main.cadastrarInternacionalizacao(new Internacionalizacao(pais, projetoInternacional));
                     break;
                 case 9:
                     System.out.print("Escolha o tipo de reserva (1 - Sala de Reuniões, 2 - Coworking): ");
@@ -167,22 +182,30 @@ public class Main {
                     String dataHoraFimInput = scanner.nextLine();
                     LocalDateTime dataHoraFim = LocalDateTime.parse(dataHoraFimInput.replace(" ", "T"));
 
-                    // Dependendo do tipo de reserva, instâncias de ReservaSalaReunioes ou ReservaCoworking são criadas
                     if (tipoReservaEscolha == 1) {
                         System.out.print("Informe a descrição da reserva: ");
                         String descricaoReserva = scanner.nextLine();
-                        main.cadastrarReserva(new ReservaSalaReunioes(solicitante, dataHoraInicio, dataHoraFim, descricaoReserva));
-                    } else if (tipoReservaEscolha == 2) {
-                        System.out.print("Informe se necessita projetor (true/false): ");
-                        boolean necessitaProjetor = scanner.nextBoolean();
-                        System.out.print("Informe se necessita computadores (true/false): ");
-                        boolean necessitaComputadores = scanner.nextBoolean();
+                        System.out.print("Informe o número de pessoas: ");
+                        int numeroPessoas = scanner.nextInt();
                         scanner.nextLine(); // Limpa o buffer
+                        System.out.print("Necessita de transmissão (true/false): ");
+                        boolean necessitaTransmissao = scanner.nextBoolean();
+                        scanner.nextLine(); // Limpa o buffer
+
+                        ReservaSalaReunioes reservaSalaReunioes = new ReservaSalaReunioes(solicitante, dataHoraInicio, dataHoraFim, descricaoReserva, numeroPessoas, necessitaTransmissao);
+                        main.cadastrarReserva(reservaSalaReunioes);
+                    } else if (tipoReservaEscolha == 2) {
+                        // Para o coworking, você pode adicionar mais parâmetros, se necessário.
                         System.out.print("Informe a descrição da reserva: ");
                         String descricaoReserva = scanner.nextLine();
-                        main.cadastrarReserva(new ReservaCoworking(solicitante, dataHoraInicio, dataHoraFim, descricaoReserva, necessitaProjetor, necessitaComputadores));
+                        System.out.print("Necessita de transmissão (true/false): ");
+                        boolean necessitaTransmissao = scanner.nextBoolean();
+                        scanner.nextLine(); // Limpa o buffer
+
+                        ReservaCoworking reservaCoworking = new ReservaCoworking(solicitante, dataHoraInicio, dataHoraFim, descricaoReserva, necessitaTransmissao);
+                        main.cadastrarReserva(reservaCoworking);
                     } else {
-                        System.out.println("Opção inválida. Tente novamente.");
+                        System.out.println("Tipo de reserva inválido.");
                     }
                     break;
                 case 0:
@@ -196,58 +219,48 @@ public class Main {
         scanner.close();
     }
 
-    // Métodos para Cadastrar
     public void cadastrarProjeto(Projeto projeto) {
         projetos.add(projeto);
-        System.out.println("Projeto cadastrado com sucesso: " + projeto.getNomeProjeto());
+        System.out.println("Projeto cadastrado com sucesso!");
     }
 
     public void cadastrarEvento(Evento evento) {
-        // Aqui você pode adicionar o evento à lista correspondente se necessário
-        System.out.println("Evento cadastrado com sucesso: " + evento.getNomeEvento());
-    }
-
-    public void cadastrarMarketing(Marketing marketing) {
-        campanhasMarketing.add(marketing);
-        System.out.println("Campanha de Marketing cadastrada para o projeto: " + marketing.getProjeto().getNomeProjeto());
+        eventos.add(evento);
+        System.out.println("Evento cadastrado com sucesso!");
     }
 
     public void cadastrarMonitoramento(Monitoramento monitoramento) {
         monitoramentos.add(monitoramento);
-        System.out.println("Monitoramento cadastrado com sucesso:");
-        System.out.println("Empresa Incubada: " + monitoramento.getEmpresaIncubada());
-        System.out.println("Data e Hora: " + monitoramento.getDataHora());
-        System.out.println("Documentos Pendentes: " + String.join(", ", monitoramento.getDocumentosPendentes()));
-        System.out.println("Arquivo Excel: " + monitoramento.getArquivoExcel());
+        System.out.println("Monitoramento cadastrado com sucesso!");
     }
 
-    public void cadastrarGestaoEstrategica(GestaoEstrategica gestao) {
-        gestoesEstrategicas.add(gestao);
-        System.out.println("Gestão Estratégica cadastrada: " + gestao.getObjetivo());
+    public void cadastrarGestaoEstrategica(GestaoEstrategica gestaoEstrategica) {
+        gestoesEstrategicas.add(gestaoEstrategica);
+        System.out.println("Gestão Estratégica cadastrada com sucesso!");
     }
 
-    public void cadastrarAmbienteIdeacao(AmbienteIdeacao ambiente) {
-        ambientesIdeacao.add(ambiente);
-        System.out.println("Ambiente de Ideação cadastrado: " + ambiente.getNomeEspaco());
+    public void cadastrarAmbienteIdeacao(AmbienteIdeacao ambienteIdeacao) {
+        ambientesIdeacao.add(ambienteIdeacao);
+        System.out.println("Ambiente de Ideação cadastrado com sucesso!");
     }
 
-    public void cadastrarGestaoAmbiental(GestaoAmbiental gestao) {
-        gestoesAmbientais.add(gestao);
-        System.out.println("Gestão Ambiental cadastrada: " + gestao.getAcao());
+    public void cadastrarGestaoAmbiental(GestaoAmbiental gestaoAmbiental) {
+        gestoesAmbientais.add(gestaoAmbiental);
+        System.out.println("Gestão Ambiental cadastrada com sucesso!");
     }
 
-    public void cadastrarResponsabilidadeSocial(ResponsabilidadeSocial responsabilidade) {
-        responsabilidadesSociais.add(responsabilidade);
-        System.out.println("Responsabilidade Social cadastrada: " + responsabilidade.getProjetoSocial());
+    public void cadastrarResponsabilidadeSocial(ResponsabilidadeSocial responsabilidadeSocial) {
+        responsabilidadesSociais.add(responsabilidadeSocial);
+        System.out.println("Responsabilidade Social cadastrada com sucesso!");
     }
 
     public void cadastrarInternacionalizacao(Internacionalizacao internacionalizacao) {
         internacionalizacoes.add(internacionalizacao);
-        System.out.println("Internacionalização cadastrada para o país: " + internacionalizacao.getPais());
+        System.out.println("Internacionalização cadastrada com sucesso!");
     }
 
     public void cadastrarReserva(Reserva reserva) {
         reservas.add(reserva);
-        System.out.println("Reserva cadastrada: " + reserva.getTipoReserva() + " por " + reserva.getSolicitante() + " de " + reserva.getDataHoraInicio() + " a " + reserva.getDataHoraFim());
+        System.out.println("Reserva cadastrada com sucesso!");
     }
 }

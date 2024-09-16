@@ -2,6 +2,10 @@ package gui;
 
 import control.Main;
 import control.Projeto;
+import control.Evento;
+import control.Reserva;
+import control.ReservaSalaReunioes;
+import control.ReservaCoworking;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -101,14 +105,18 @@ public class IncubadoraApp extends Application {
                                     Optional<String> responsavelEvento = dialog.showAndWait();
 
                                     if (responsavelEvento.isPresent()) {
+                                        // Converter data e horas para os tipos adequados
+                                        LocalDateTime dataHoraInicio = LocalDateTime.parse(dataEvento.get() + "T" + horaInicioEvento.get());
+                                        LocalDateTime dataHoraFim = LocalDateTime.parse(dataEvento.get() + "T" + horaFimEvento.get());
+
                                         mainController.cadastrarEvento(new Evento(
                                                 nomeEvento.get(),
                                                 detalhesEvento.get(),
-                                                dataEvento.get(),
-                                                horaInicioEvento.get(),
-                                                horaFimEvento.get(),
+                                                dataHoraInicio.toLocalDate(),
+                                                dataHoraInicio.toLocalTime(),
+                                                dataHoraFim.toLocalTime(),
                                                 localEvento.get(),
-                                                numeroParticipantes.get(),
+                                                Integer.parseInt(numeroParticipantes.get()),
                                                 responsavelEvento.get()
                                         ));
                                     }
