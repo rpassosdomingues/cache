@@ -21,12 +21,9 @@ public class Projeto {
         // Converter a string da data para LocalDate
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Formato esperado
         this.dataInicio = LocalDate.parse(dataInicioInput, formatter); // Converte para LocalDate
-    }
 
-    // Metodo para adicionar projeto à lista
-    public static void cadastrarProjeto(Projeto projeto) {
-        projetos.add(projeto); // Adiciona o projeto à lista
-        System.out.println("Projeto cadastrado com sucesso!");
+        // Adiciona o projeto à lista de projetos
+        projetos.add(this);
     }
 
     // Getters

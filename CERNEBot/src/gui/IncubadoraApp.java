@@ -3,9 +3,6 @@ package gui;
 import control.Main;
 import control.Projeto;
 import control.Evento;
-import control.Reserva;
-import control.ReservaSalaReunioes;
-import control.ReservaCoworking;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -35,7 +32,7 @@ public class IncubadoraApp extends Application {
         cadastrarProjetoButton.setOnAction(e -> cadastrarProjeto());
 
         // Ação do botão 'Cadastrar Evento'
-        cadastrarEventoButton.setOnAction(e -> cadastrarEvento());
+        cadastrarEventoButton.setOnAction(e -> cadastrarEventoComDialog());
 
         // Ação do botão 'Cadastrar Reserva'
         cadastrarReservaButton.setOnAction(e -> cadastrarReserva());
@@ -64,14 +61,9 @@ public class IncubadoraApp extends Application {
                 Optional<String> dataInicioProjeto = dialog.showAndWait();
 
                 if (dataInicioProjeto.isPresent() && !dataInicioProjeto.get().isEmpty()) {
-                    try {
-                        Projeto projeto = new Projeto(nomeProjeto.get(), descricaoProjeto.get(), dataInicioProjeto.get());
-                        mainController.cadastrarProjeto(projeto);
-                    } catch (DateTimeParseException e) {
-                        showAlert("Data de início inválida. Por favor, use o formato yyyy-mm-dd.");
-                    } catch (Exception e) {
-                        showAlert("Erro ao cadastrar o projeto: " + e.getMessage());
-                    }
+                    Projeto projeto = new Projeto(nomeProjeto.get(), descricaoProjeto.get(), dataInicioProjeto.get());
+                    // Aqui você pode chamar a lógica para armazenar o projeto, se necessário
+                    System.out.println("Projeto cadastrado com sucesso: " + projeto.getNomeProjeto());
                 } else {
                     showAlert("Data de início não pode ser vazia.");
                 }
@@ -83,43 +75,33 @@ public class IncubadoraApp extends Application {
         }
     }
 
-    private void cadastrarEvento() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Cadastrar Evento");
-        dialog.setHeaderText("Informe o nome do evento:");
-        Optional<String> nomeEvento = dialog.showAndWait();
+    private void cadastrarEventoComDialog() {
+        Optional<String> nomeEvento = showInputDialog("Cadastrar Evento", "Informe o nome do evento:");
 
-        if (nomeEvento.isPresent() && !nomeEvento.get().isEmpty()) {
-            dialog.setHeaderText("Informe os detalhes do evento:");
-            Optional<String> detalhesEvento = dialog.showAndWait();
+        if (nomeEvento.isPresent()) {
+            Optional<String> detalhesEvento = showInputDialog("Cadastrar Evento", "Informe os detalhes do evento:");
 
-            if (detalhesEvento.isPresent() && !detalhesEvento.get().isEmpty()) {
-                dialog.setHeaderText("Informe a data do evento (yyyy-mm-dd):");
-                Optional<String> dataEvento = dialog.showAndWait();
+            if (detalhesEvento.isPresent()) {
+                Optional<String> dataEvento = showInputDialog("Cadastrar Evento", "Informe a data do evento (yyyy-mm-dd):");
 
-                if (dataEvento.isPresent() && !dataEvento.get().isEmpty()) {
-                    dialog.setHeaderText("Informe a hora de início do evento (hh:mm):");
-                    Optional<String> horaInicioEvento = dialog.showAndWait();
+                if (dataEvento.isPresent()) {
+                    Optional<String> horaInicioEvento = showInputDialog("Cadastrar Evento", "Informe a hora de início do evento (hh:mm):");
 
-                    if (horaInicioEvento.isPresent() && !horaInicioEvento.get().isEmpty()) {
-                        dialog.setHeaderText("Informe a hora de fim do evento (hh:mm):");
-                        Optional<String> horaFimEvento = dialog.showAndWait();
+                    if (horaInicioEvento.isPresent()) {
+                        Optional<String> horaFimEvento = showInputDialog("Cadastrar Evento", "Informe a hora de fim do evento (hh:mm):");
 
-                        if (horaFimEvento.isPresent() && !horaFimEvento.get().isEmpty()) {
-                            dialog.setHeaderText("Informe o local do evento:");
-                            Optional<String> localEvento = dialog.showAndWait();
+                        if (horaFimEvento.isPresent()) {
+                            Optional<String> localEvento = showInputDialog("Cadastrar Evento", "Informe o local do evento:");
 
-                            if (localEvento.isPresent() && !localEvento.get().isEmpty()) {
-                                dialog.setHeaderText("Informe o número de participantes:");
-                                Optional<String> numeroParticipantes = dialog.showAndWait();
+                            if (localEvento.isPresent()) {
+                                Optional<String> numeroParticipantes = showInputDialog("Cadastrar Evento", "Informe o número de participantes:");
 
-                                if (numeroParticipantes.isPresent() && !numeroParticipantes.get().isEmpty()) {
-                                    dialog.setHeaderText("Informe o responsável pelo evento:");
-                                    Optional<String> responsavelEvento = dialog.showAndWait();
+                                if (numeroParticipantes.isPresent()) {
+                                    Optional<String> responsavelEvento = showInputDialog("Cadastrar Evento", "Informe o responsável pelo evento:");
 
-                                    if (responsavelEvento.isPresent() && !responsavelEvento.get().isEmpty()) {
-                                        // Converter data e horas para os tipos adequados
+                                    if (responsavelEvento.isPresent()) {
                                         try {
+                                            // Converte as entradas para os tipos adequados
                                             LocalDateTime dataHoraInicio = LocalDateTime.parse(dataEvento.get() + "T" + horaInicioEvento.get());
                                             LocalDateTime dataHoraFim = LocalDateTime.parse(dataEvento.get() + "T" + horaFimEvento.get());
 
@@ -133,6 +115,7 @@ public class IncubadoraApp extends Application {
                                                     Integer.parseInt(numeroParticipantes.get()),
                                                     responsavelEvento.get()
                                             ));
+                                            showAlert("Evento cadastrado com sucesso!");
                                         } catch (Exception e) {
                                             showAlert("Erro ao cadastrar o evento. Verifique os dados inseridos.");
                                         }
@@ -160,6 +143,23 @@ public class IncubadoraApp extends Application {
         } else {
             showAlert("Nome do evento não pode ser vazio.");
         }
+    }
+
+    // Método auxiliar para exibir um diálogo de entrada
+    private Optional<String> showInputDialog(String title, String headerText) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText(headerText);
+        return dialog.showAndWait();
+    }
+
+    // Metodo auxiliar para exibir uma mensagem de alerta
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Informação");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void cadastrarReserva() {
@@ -246,14 +246,6 @@ public class IncubadoraApp extends Application {
         } else {
             showAlert("Nome do solicitante não pode ser vazio.");
         }
-    }
-
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Atenção");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     public static void main(String[] args) {

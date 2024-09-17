@@ -35,50 +35,6 @@ public class Evento {
         this.assunto = assunto;
     }
 
-    // Método para cadastrar um evento
-    public void cadastrarEvento() {
-        eventos.add(this); // 'this' refere-se ao próprio objeto Evento
-        System.out.println("Evento cadastrado com sucesso!");
-    }
-
-    // Método para listar todos os eventos cadastrados
-    public static void listarEventos() {
-        if (eventos.isEmpty()) {
-            System.out.println("Nenhum evento cadastrado.");
-            return;
-        }
-        for (Evento evento : eventos) {
-            System.out.println(evento); // Chama o método toString() para imprimir detalhes do evento
-        }
-    }
-
-    // Método para buscar eventos por data
-    public static void buscarEventosPorData(LocalDate data) {
-        boolean encontrado = false;
-        for (Evento evento : eventos) {
-            if (evento.getDia().equals(data)) {
-                System.out.println(evento);
-                encontrado = true;
-            }
-        }
-        if (!encontrado) {
-            System.out.println("Nenhum evento encontrado para a data " + data);
-        }
-    }
-
-    // Método toString para representar o evento de forma legível
-    @Override
-    public String toString() {
-        return "Evento: " + nomeEvento +
-                ", Projeto: " + nomeProjeto +
-                ", Ação: " + acaoExecutada +
-                ", Local: " + local +
-                ", Data: " + dia +
-                ", Início: " + horarioInicio +
-                ", Término: " + horarioTermino +
-                ", Assunto: " + assunto;
-    }
-
     // Getters e Setters
     public String getNomeProjeto() {
         return nomeProjeto;
