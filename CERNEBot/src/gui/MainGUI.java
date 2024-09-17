@@ -1,4 +1,4 @@
-package control;
+package gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ public class MainGUI extends JFrame {
 
     public MainGUI() {
         pecas = new ArrayList<>(); // Inicializando a lista
-        setTitle("CERNEBot");
+        setTitle("Sistema de Gestão");
         setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainPanel = new JPanel();

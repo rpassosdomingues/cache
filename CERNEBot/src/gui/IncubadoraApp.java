@@ -3,7 +3,8 @@ package gui;
 import control.Main;
 import control.Projeto;
 import control.Evento;
-
+import control.ReservaSalaReunioes;
+import control.ReservaCoworking;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -28,16 +29,10 @@ public class IncubadoraApp extends Application {
         Button cadastrarReservaButton = new Button("Cadastrar Reserva");
         Button sairButton = new Button("Sair");
 
-        // Ação do botão 'Cadastrar Projeto'
+        // Ações dos botões
         cadastrarProjetoButton.setOnAction(e -> cadastrarProjeto());
-
-        // Ação do botão 'Cadastrar Evento'
         cadastrarEventoButton.setOnAction(e -> cadastrarEventoComDialog());
-
-        // Ação do botão 'Cadastrar Reserva'
         cadastrarReservaButton.setOnAction(e -> cadastrarReserva());
-
-        // Ação do botão 'Sair'
         sairButton.setOnAction(e -> primaryStage.close());
 
         VBox vbox = new VBox(10, cadastrarProjetoButton, cadastrarEventoButton, cadastrarReservaButton, sairButton);
@@ -47,22 +42,16 @@ public class IncubadoraApp extends Application {
     }
 
     private void cadastrarProjeto() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Cadastrar Projeto");
-        dialog.setHeaderText("Informe o nome do projeto:");
-        Optional<String> nomeProjeto = dialog.showAndWait();
+        Optional<String> nomeProjeto = showInputDialog("Cadastrar Projeto", "Informe o nome do projeto:");
 
         if (nomeProjeto.isPresent() && !nomeProjeto.get().isEmpty()) {
-            dialog.setHeaderText("Informe a descrição do projeto:");
-            Optional<String> descricaoProjeto = dialog.showAndWait();
+            Optional<String> descricaoProjeto = showInputDialog("Cadastrar Projeto", "Informe a descrição do projeto:");
 
             if (descricaoProjeto.isPresent() && !descricaoProjeto.get().isEmpty()) {
-                dialog.setHeaderText("Informe a data de início do projeto (yyyy-mm-dd):");
-                Optional<String> dataInicioProjeto = dialog.showAndWait();
+                Optional<String> dataInicioProjeto = showInputDialog("Cadastrar Projeto", "Informe a data de início do projeto (yyyy-mm-dd):");
 
                 if (dataInicioProjeto.isPresent() && !dataInicioProjeto.get().isEmpty()) {
                     Projeto projeto = new Projeto(nomeProjeto.get(), descricaoProjeto.get(), dataInicioProjeto.get());
-                    // Aqui você pode chamar a lógica para armazenar o projeto, se necessário
                     System.out.println("Projeto cadastrado com sucesso: " + projeto.getNomeProjeto());
                 } else {
                     showAlert("Data de início não pode ser vazia.");
@@ -145,7 +134,6 @@ public class IncubadoraApp extends Application {
         }
     }
 
-    // Método auxiliar para exibir um diálogo de entrada
     private Optional<String> showInputDialog(String title, String headerText) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(title);
@@ -153,7 +141,6 @@ public class IncubadoraApp extends Application {
         return dialog.showAndWait();
     }
 
-    // Metodo auxiliar para exibir uma mensagem de alerta
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Informação");
@@ -163,34 +150,27 @@ public class IncubadoraApp extends Application {
     }
 
     private void cadastrarReserva() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Cadastrar Reserva");
-        dialog.setHeaderText("Informe o nome do solicitante:");
-        Optional<String> solicitante = dialog.showAndWait();
+        Optional<String> solicitante = showInputDialog("Cadastrar Reserva", "Informe o nome do solicitante:");
 
         if (solicitante.isPresent() && !solicitante.get().isEmpty()) {
-            dialog.setHeaderText("Informe a data e hora de início da reserva (yyyy-mm-dd hh:mm):");
-            Optional<String> dataHoraInicioInput = dialog.showAndWait();
+            Optional<String> dataHoraInicioInput = showInputDialog("Cadastrar Reserva", "Informe a data e hora de início da reserva (yyyy-mm-dd hh:mm):");
 
             if (dataHoraInicioInput.isPresent() && !dataHoraInicioInput.get().isEmpty()) {
                 try {
                     LocalDateTime dataHoraInicio = LocalDateTime.parse(dataHoraInicioInput.get().replace(" ", "T"));
 
-                    dialog.setHeaderText("Informe a data e hora de fim da reserva (yyyy-mm-dd hh:mm):");
-                    Optional<String> dataHoraFimInput = dialog.showAndWait();
+                    Optional<String> dataHoraFimInput = showInputDialog("Cadastrar Reserva", "Informe a data e hora de fim da reserva (yyyy-mm-dd hh:mm):");
 
                     if (dataHoraFimInput.isPresent() && !dataHoraFimInput.get().isEmpty()) {
                         LocalDateTime dataHoraFim = LocalDateTime.parse(dataHoraFimInput.get().replace(" ", "T"));
 
-                        dialog.setHeaderText("Escolha o tipo de reserva (1 - Sala de Reuniões, 2 - Coworking):");
-                        Optional<String> tipoReservaInput = dialog.showAndWait();
+                        Optional<String> tipoReservaInput = showInputDialog("Cadastrar Reserva", "Escolha o tipo de reserva (1 - Sala de Reuniões, 2 - Coworking):");
 
                         if (tipoReservaInput.isPresent() && !tipoReservaInput.get().isEmpty()) {
                             int tipoReservaEscolha = Integer.parseInt(tipoReservaInput.get());
 
                             if (tipoReservaEscolha == 1) {
-                                dialog.setHeaderText("Informe a descrição da reserva:");
-                                Optional<String> descricaoReserva = dialog.showAndWait();
+                                Optional<String> descricaoReserva = showInputDialog("Cadastrar Reserva", "Informe a descrição da reserva:");
 
                                 if (descricaoReserva.isPresent() && !descricaoReserva.get().isEmpty()) {
                                     mainController.cadastrarReserva(new ReservaSalaReunioes(
@@ -199,24 +179,22 @@ public class IncubadoraApp extends Application {
                                             dataHoraFim,
                                             descricaoReserva.get()
                                     ));
+                                    showAlert("Reserva de sala de reuniões cadastrada com sucesso!");
                                 } else {
                                     showAlert("Descrição da reserva não pode ser vazia.");
                                 }
                             } else if (tipoReservaEscolha == 2) {
-                                dialog.setHeaderText("Informe se necessita projetor (true/false):");
-                                Optional<String> necessitaProjetorInput = dialog.showAndWait();
+                                Optional<String> necessitaProjetorInput = showInputDialog("Cadastrar Reserva", "Informe se necessita projetor (true/false):");
 
                                 if (necessitaProjetorInput.isPresent()) {
                                     boolean necessitaProjetor = Boolean.parseBoolean(necessitaProjetorInput.get());
 
-                                    dialog.setHeaderText("Informe se necessita computadores (true/false):");
-                                    Optional<String> necessitaComputadoresInput = dialog.showAndWait();
+                                    Optional<String> necessitaComputadoresInput = showInputDialog("Cadastrar Reserva", "Informe se necessita computadores (true/false):");
 
                                     if (necessitaComputadoresInput.isPresent()) {
                                         boolean necessitaComputadores = Boolean.parseBoolean(necessitaComputadoresInput.get());
 
-                                        dialog.setHeaderText("Informe a descrição da reserva:");
-                                        Optional<String> descricaoReserva = dialog.showAndWait();
+                                        Optional<String> descricaoReserva = showInputDialog("Cadastrar Reserva", "Informe a descrição da reserva:");
 
                                         if (descricaoReserva.isPresent() && !descricaoReserva.get().isEmpty()) {
                                             mainController.cadastrarReserva(new ReservaCoworking(
@@ -227,6 +205,7 @@ public class IncubadoraApp extends Application {
                                                     necessitaComputadores,
                                                     descricaoReserva.get()
                                             ));
+                                            showAlert("Reserva de coworking cadastrada com sucesso!");
                                         } else {
                                             showAlert("Descrição da reserva não pode ser vazia.");
                                         }
