@@ -67,30 +67,28 @@ public class Main extends Application {
     }
 
     private void openNewGameWindow() {
-        Stage newGameStage = new Stage();
-        newGameStage.initModality(Modality.APPLICATION_MODAL);
-        newGameStage.setTitle("New Game");
-
+        // Limpa as opções existentes do painel de controle
+        controlPanel.getChildren().clear();
+    
+        // Cria o layout do novo jogo
         VBox newGameLayout = new VBox(10);
         ComboBox<String> stageSelection = createStageSelection();
         ComboBox<String> heroSelection = createHeroSelection();
-        
+    
         Button startButton = new Button("Start");
         startButton.setOnAction(e -> startGame());
-
+    
         Button backButton = new Button("Back");
-        backButton.setOnAction(e -> newGameStage.close());
-
+        backButton.setOnAction(e -> backToMainMenu()); // Retorna ao menu principal
+    
         heroSelection.setOnAction(e -> selectHero(heroSelection.getValue())); // Atualiza o herói ao selecionar
-
+    
         newGameLayout.getChildren().addAll(new Label("Select Stage:"), stageSelection,
                                             new Label("Select Hero:"), heroSelection,
                                             startButton, backButton);
-
-        Scene newGameScene = new Scene(newGameLayout, 300, 250);
-        newGameStage.setScene(newGameScene);
-        newGameStage.showAndWait(); // Mostra a janela como modal
-    }
+    
+        controlPanel.getChildren().addAll(new Label("New Game Options"), newGameLayout); // Adiciona o layout de novo jogo ao painel de controle
+    }    
 
     private ComboBox<String> createStageSelection() {
         ComboBox<String> stageSelection = new ComboBox<>();
