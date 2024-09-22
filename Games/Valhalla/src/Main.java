@@ -255,8 +255,18 @@ public class Main extends Application {
 
     private void backToMainMenu() {
         controlPanel.getChildren().clear(); // Limpa o painel de controle
-        controlPanel.getChildren().addAll(new Button("New Game"), new Button("Options"), new Button("Exit")); // Recria os botões do menu principal
-    }
+    
+        // Recria os botões do menu principal
+        Button newGameButton = new Button("New Game");
+        Button optionsButton = new Button("Options");
+        Button exitButton = new Button("Exit");
+    
+        newGameButton.setOnAction(e -> openNewGameWindow()); // Abre o submenu de "New Game"
+        optionsButton.setOnAction(e -> showOptionsMenu()); // Abre o menu de opções
+        exitButton.setOnAction(e -> exitGame()); // Sai do jogo
+    
+        controlPanel.getChildren().addAll(newGameButton, optionsButton, exitButton); // Adiciona os botões ao painel de controle
+    }    
 
     private void exitGame() {
         System.exit(0); // Fecha o jogo
