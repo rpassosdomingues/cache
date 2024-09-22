@@ -11,11 +11,15 @@ public class Portal extends Circle {
         super(x, y, radius);
 
         // Gradiente de arco-íris com transição suave
-        RadialGradient gradient = new RadialGradient(0, 0, 0.5, 0.5, 1, true, CycleMethod.NO_CYCLE,
-                new Stop(0, isStart ? Color.BLUE : Color.RED),
-                new Stop(0.5, Color.GREEN),
-                new Stop(1, isStart ? Color.RED : Color.BLUE));
-
-        this.setFill(gradient);
+        RadialGradient gradient = new RadialGradient(
+                0, 0, // proportional radius and center
+                0.5, 0.5, // center of the gradient
+                radius, // radius
+                true, // proportional
+                CycleMethod.REPEAT, // cycle method
+                new Stop(0, Color.RED), // start color
+                new Stop(1, Color.YELLOW) // end color
+        );
+        setFill(gradient);
     }
 }
