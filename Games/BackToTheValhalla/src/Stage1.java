@@ -19,6 +19,5 @@ public class Stage1 extends Scenario {
         createWavePath(waveCount, waveLength); // Cria o caminho da onda
         initializeHero(); // Inicializa o herói
         initializeEnemies(Enemy.Difficulty.EASY); // Inicializa os inimigos com uma dificuldade específica
-        addPortals(); // Adiciona os portais ao cenário, herdado de Scenario
     }
 }
