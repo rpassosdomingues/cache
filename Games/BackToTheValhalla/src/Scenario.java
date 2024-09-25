@@ -15,18 +15,18 @@ public abstract class Scenario {
     protected Hero hero;
     protected int heroHealth;
     private Color backgroundColor; // Cor de fundo
-    private Color waveColor; // Cor da onda
+    private Color pathColor; // Cor da onda
+    protected int waveCount; // Número de onda
+    protected double waveLength; // Comprimento de onda
 
-    // Definição das constantes para o cenário
-    private static final int STAGE_WAVE_COUNT = 5; // Número de ondas
-    private static final double STAGE_WAVELENGTH = 10; // Comprimento da onda
-
-    public Scenario(Color backgroundColor, Color waveColor) {
+    public Scenario(Color backgroundColor, Color pathColor, int waveCount, double waveLength) {
         this.root = new Pane();
         this.enemies = new ArrayList<>();
         this.heroHealth = 100; // Saúde inicial do herói
         this.backgroundColor = backgroundColor;
-        this.waveColor = waveColor;
+        this.pathColor = pathColor;
+        this.waveCount = waveCount; // Inicializa o número de ondas
+        this.waveLength = waveLength; // Inicializa o comprimento da onda
 
         // Define a cor de fundo do cenário
         root.setStyle("-fx-background-color: " + toHexString(backgroundColor) + ";");
@@ -50,7 +50,7 @@ public abstract class Scenario {
     }
 
     public void createStage(Enemy.Difficulty difficulty) {
-        createWavePath(STAGE_WAVE_COUNT, STAGE_WAVELENGTH); // Chama o método com argumentos corretos
+        createWavePath(waveCount, waveLength); // Chama o método com argumentos corretos
         initializeHero();
         initializeEnemies(difficulty); // Passa a dificuldade recebida
         gameLoop();
@@ -63,9 +63,9 @@ public abstract class Scenario {
         root.getChildren().add(place); // Adiciona o lugar ao painel
     }
 
-    public void createWavePath(int waveCount, double wavelength) {
+    public void createWavePath(int waveCount, double wavelength) { // Adicionado tipos para os parâmetros
         Path wavePath = new Path();
-        wavePath.setStroke(waveColor); // Usando a cor da onda definida na classe Scenario
+        wavePath.setStroke(pathColor); // Usando a cor da onda definida na classe Scenario
         wavePath.setStrokeWidth(30);
         wavePath.getStyleClass().add("wave-path");
 
@@ -108,7 +108,7 @@ public abstract class Scenario {
         }
     }
 
-    private void addPortals() {
+    public void addPortals() {
         // Posição inicial constante
         double startX = 0;
         
