@@ -99,11 +99,32 @@ public class Main extends Application {
         stageSelection.setValue("Stage 1"); // Valor padrão
         return stageSelection;
     }
+
     private ComboBox<String> createHeroSelection() {
         ComboBox<String> heroSelection = new ComboBox<>();
         heroSelection.getItems().addAll("Thor", "Loki", "Heimdall", "Feiticeira Negra", "Odin");
         heroSelection.setValue("Thor"); // Valor padrão
         return heroSelection;
+    }
+
+    private Scenario currentScenario; // Mantenha uma referência ao cenário atual
+
+    private void selectStage(String stage) {
+        // Remove o cenário atual da área de jogo, se existir
+        if (currentScenario != null) {
+            gameArea.getChildren().remove(currentScenario.getRoot()); // Remove o root do cenário atual
+            currentScenario = null; // Limpa a referência para evitar conflitos
+        }
+
+        // Usa a StageFactory para criar o novo cenário
+        currentScenario = StageFactory.createStage(stage); // Cria um novo cenário
+    
+        // Log para depuração
+        System.out.println("Carregando " + stage);
+
+        // Configura e adiciona o novo cenário na área de jogo
+        currentScenario.setup(); // Inicializa o novo cenário
+        gameArea.getChildren().add(currentScenario.getRoot()); // Adiciona o root do novo cenário na área de jogo
     }
 
     private void selectHero(String heroName) {
@@ -118,25 +139,6 @@ public class Main extends Application {
             positionHero(); // Posiciona o herói na área do jogo
             gameArea.getChildren().add(hero.getShape()); // Adiciona o herói à área do jogo
         }
-    }
-
-    private Scenario currentScenario; // Mantenha uma referência ao cenário atual
-
-    private void selectStage(String stage) {
-        // Remove o cenário atual da área de jogo, se existir
-        if (currentScenario != null) {
-            gameArea.getChildren().remove(currentScenario.getRoot()); // Remove o root do cenário atual
-        }
-
-        // Usa a StageFactory para criar o novo cenário
-        currentScenario = StageFactory.createStage(stage); // Cria um novo cenário
-    
-        // Log para depuração
-        System.out.println("Carregando " + stage);
-
-        // Configura e adiciona o novo cenário na área de jogo
-        currentScenario.setup(); // Inicializa o novo cenário
-        gameArea.getChildren().add(currentScenario.getRoot()); // Adiciona o root do novo cenário na área de jogo
     }
 
     private void positionHero() {
