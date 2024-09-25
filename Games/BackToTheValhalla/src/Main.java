@@ -124,27 +124,11 @@ public class Main extends Application {
         // Limpa a área de jogo antes de carregar o novo Stage
         gameArea.getChildren().clear();
 
-        Scenario scenario;
-
-        // Lógica para selecionar o Stage baseado no nome
-        switch (stage) {
-            case "Stage 1":
-                scenario = new Stage1(); // Carrega Stage 1
-                System.out.println("Carregando Stage 1");
-                break;
-            case "Stage 2":
-                scenario = new Stage2(); // Carrega Stage 2
-                System.out.println("Carregando Stage 2");
-                break;
-            case "Stage 3":
-                scenario = new Stage3(); // Carrega Stage 3
-                System.out.println("Carregando Stage 3");
-                break;
-            default:
-                scenario = new Stage1(); // Fallback para Stage 1
-                System.out.println("Stage não reconhecido. Carregando Stage 1 como padrão.");
-                break;
-        }
+        // Usa a StageFactory para criar o cenário
+        Scenario scenario = StageFactory.createStage(stage);
+    
+        // Log para depuração
+        System.out.println("Carregando " + stage);
 
         // Configura e adiciona o cenário na área de jogo
         scenario.setup();
