@@ -71,24 +71,25 @@ public class Main extends Application {
     private void openNewGameWindow() {
         // Limpa as opções existentes do painel de controle
         controlPanel.getChildren().clear();
-    
+
         // Cria o layout do novo jogo
         VBox newGameLayout = new VBox(10);
         ComboBox<String> stageSelection = createStageSelection();
         ComboBox<String> heroSelection = createHeroSelection();
-    
+
         Button startButton = new Button("Start");
         startButton.setOnAction(e -> startGame());
-    
+
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> backToMainMenu()); // Retorna ao menu principal
-    
+
         heroSelection.setOnAction(e -> selectHero(heroSelection.getValue())); // Atualiza o herói ao selecionar
-    
+        stageSelection.setOnAction(e -> selectStage(stageSelection.getValue())); // Atualiza o estágio ao selecionar
+
         newGameLayout.getChildren().addAll(new Label("Select Stage:"), stageSelection,
                                             new Label("Select Hero:"), heroSelection,
                                             startButton, backButton);
-    
+
         controlPanel.getChildren().addAll(new Label("New Game Options"), newGameLayout); // Adiciona o layout de novo jogo ao painel de controle
     }    
 
@@ -98,7 +99,6 @@ public class Main extends Application {
         stageSelection.setValue("Stage 1"); // Valor padrão
         return stageSelection;
     }
-
     private ComboBox<String> createHeroSelection() {
         ComboBox<String> heroSelection = new ComboBox<>();
         heroSelection.getItems().addAll("Thor", "Loki", "Heimdall", "Feiticeira Negra", "Odin");
