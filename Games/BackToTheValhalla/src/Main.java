@@ -76,6 +76,7 @@ public class Main extends Application {
         VBox newGameLayout = new VBox(10);
         ComboBox<String> stageSelection = createStageSelection();
         ComboBox<String> heroSelection = createHeroSelection();
+        selectHero("Thor"); // Define Thor como o herói padrão
 
         Button startButton = new Button("Start");
         startButton.setOnAction(e -> startGame());
