@@ -7,18 +7,18 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Stop;
 
 public class Portal extends Circle {
-    public Portal(double x, double y, double radius, boolean isStart) {
+    public Portal(double x, double y, double radius, Color startColor, Color endColor) {
         super(x, y, radius);
 
-        // Gradiente de arco-íris com transição suave
+        // Gradiente radial com cores personalizadas
         RadialGradient gradient = new RadialGradient(
                 0, 0, // proportional radius and center
                 0.5, 0.5, // center of the gradient
                 radius, // radius
                 true, // proportional
                 CycleMethod.REPEAT, // cycle method
-                new Stop(0, Color.RED), // start color
-                new Stop(1, Color.YELLOW) // end color
+                new Stop(0, startColor), // start color
+                new Stop(1, endColor) // end color
         );
         setFill(gradient);
     }

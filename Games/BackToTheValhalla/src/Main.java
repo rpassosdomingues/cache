@@ -35,6 +35,8 @@ public class Main extends Application {
         BorderPane layout = new BorderPane();
         gameArea = new Pane();
         gameArea.setPrefSize(500, 400);
+    
+        // Define a cor de fundo
         gameArea.setStyle("-fx-background-color: lightblue;"); // Cor de fundo da área do jogo
 
         layout.setCenter(gameArea);
@@ -119,8 +121,34 @@ public class Main extends Application {
     }
 
     private void selectStage(String stage) {
-        // Aqui você pode implementar a lógica para carregar diferentes estágios
-        System.out.println("Selected stage: " + stage);
+        // Limpa a área de jogo antes de carregar o novo Stage
+        gameArea.getChildren().clear();
+
+        Scenario scenario;
+
+        // Lógica para selecionar o Stage baseado no nome
+        switch (stage) {
+            case "Stage 1":
+                scenario = new Stage1(); // Carrega Stage 1
+                System.out.println("Carregando Stage 1");
+                break;
+            case "Stage 2":
+                scenario = new Stage2(); // Carrega Stage 2
+                System.out.println("Carregando Stage 2");
+                break;
+            case "Stage 3":
+                scenario = new Stage3(); // Carrega Stage 3
+                System.out.println("Carregando Stage 3");
+                break;
+            default:
+                scenario = new Stage1(); // Fallback para Stage 1
+                System.out.println("Stage não reconhecido. Carregando Stage 1 como padrão.");
+                break;
+        }
+
+        // Configura e adiciona o cenário na área de jogo
+        scenario.setup();
+        gameArea.getChildren().add(scenario.getRoot()); // Adiciona o root do cenário na área de jogo
     }
 
     private void positionHero() {
