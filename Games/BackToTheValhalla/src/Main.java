@@ -120,19 +120,23 @@ public class Main extends Application {
         }
     }
 
-    private void selectStage(String stage) {
-        // Limpa a área de jogo antes de carregar o novo Stage
-        gameArea.getChildren().clear();
+    private Scenario currentScenario; // Mantenha uma referência ao cenário atual
 
-        // Usa a StageFactory para criar o cenário
-        Scenario scenario = StageFactory.createStage(stage);
+    private void selectStage(String stage) {
+        // Remove o cenário atual da área de jogo, se existir
+        if (currentScenario != null) {
+            gameArea.getChildren().remove(currentScenario.getRoot()); // Remove o root do cenário atual
+        }
+
+        // Usa a StageFactory para criar o novo cenário
+        currentScenario = StageFactory.createStage(stage); // Cria um novo cenário
     
         // Log para depuração
         System.out.println("Carregando " + stage);
 
-        // Configura e adiciona o cenário na área de jogo
-        scenario.setup();
-        gameArea.getChildren().add(scenario.getRoot()); // Adiciona o root do cenário na área de jogo
+        // Configura e adiciona o novo cenário na área de jogo
+        currentScenario.setup(); // Inicializa o novo cenário
+        gameArea.getChildren().add(currentScenario.getRoot()); // Adiciona o root do novo cenário na área de jogo
     }
 
     private void positionHero() {
