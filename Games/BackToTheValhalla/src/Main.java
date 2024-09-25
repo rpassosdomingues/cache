@@ -69,35 +69,52 @@ public class Main extends Application {
     }
 
     private void openNewGameWindow() {
-        // Limpa as opções existentes do painel de controle
+        // Clear existing options from the control panel
         controlPanel.getChildren().clear();
 
-        // Cria o layout do novo jogo
+        // Create the new game layout
         VBox newGameLayout = new VBox(10);
         ComboBox<String> stageSelection = createStageSelection();
         ComboBox<String> heroSelection = createHeroSelection();
-        selectHero("Thor"); // Define Thor como o herói padrão
+        selectHero("Thor"); // Set Thor as the default hero
 
         Button startButton = new Button("Start");
         startButton.setOnAction(e -> startGame());
 
         Button backButton = new Button("Back");
-        backButton.setOnAction(e -> backToMainMenu()); // Retorna ao menu principal
+        backButton.setOnAction(e -> backToMainMenu()); // Return to main menu
 
-        heroSelection.setOnAction(e -> selectHero(heroSelection.getValue())); // Atualiza o herói ao selecionar
-        stageSelection.setOnAction(e -> selectStage(stageSelection.getValue())); // Atualiza o estágio ao selecionar
+        heroSelection.setOnAction(e -> selectHero(heroSelection.getValue())); // Update hero on selection
+
+        // Updated stage selection listener
+        stageSelection.setOnAction(e -> {
+            String selectedStage = stageSelection.getValue();
+            int stageNumber = Integer.parseInt(selectedStage.split(" ")[1]); // Extracts the stage number from the string
+            selectStage(stageNumber); // Calls the method with the integer stage number
+        });
 
         newGameLayout.getChildren().addAll(new Label("Select Stage:"), stageSelection,
                                             new Label("Select Hero:"), heroSelection,
                                             startButton, backButton);
 
-        controlPanel.getChildren().addAll(new Label("New Game Options"), newGameLayout); // Adiciona o layout de novo jogo ao painel de controle
+        controlPanel.getChildren().addAll(new Label("New Game Options"), newGameLayout); // Add new game layout to control panel
     }    
 
     private ComboBox<String> createStageSelection() {
         ComboBox<String> stageSelection = new ComboBox<>();
         stageSelection.getItems().addAll("Stage 1", "Stage 2", "Stage 3"); // Exemplo de estágios
         stageSelection.setValue("Stage 1"); // Valor padrão
+
+        // Adiciona um listener para detectar mudanças na seleção
+        stageSelection.setOnAction(event -> {
+            // Obtém a string selecionada
+            String selectedStage = stageSelection.getValue();
+        
+            // Converte a string para o número do estágio
+            int stageNumber = Integer.parseInt(selectedStage.split(" ")[1]); // Extrai o número do estágio
+            selectStage(stageNumber); // Chama o método com o número do estágio
+        });
+
         return stageSelection;
     }
 
@@ -110,18 +127,21 @@ public class Main extends Application {
 
     private Scenario currentScenario; // Mantenha uma referência ao cenário atual
 
-    private void selectStage(String stage) {
+    private void selectStage(int stageNumber) {
         // Remove o cenário atual da área de jogo, se existir
         if (currentScenario != null) {
             gameArea.getChildren().remove(currentScenario.getRoot()); // Remove o root do cenário atual
             currentScenario = null; // Limpa a referência para evitar conflitos
         }
 
+        // Define a dificuldade desejada
+        Enemy.Difficulty difficulty = Enemy.Difficulty.EASY; // Altere conforme necessário
+
         // Usa a StageFactory para criar o novo cenário
-        currentScenario = StageFactory.createStage(stage); // Cria um novo cenário
-    
+        currentScenario = StageFactory.createStage(stageNumber, difficulty); // Cria um novo cenário
+
         // Log para depuração
-        System.out.println("Carregando " + stage);
+        System.out.println("Carregando estágio " + stageNumber);
 
         // Configura e adiciona o novo cenário na área de jogo
         currentScenario.setup(); // Inicializa o novo cenário

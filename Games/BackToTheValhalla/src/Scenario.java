@@ -23,13 +23,12 @@ public abstract class Scenario {
     public Scenario(Color backgroundColor, Color pathColor, int waveCount, double waveLength) {
         this.root = new Pane();
         this.enemies = new ArrayList<>();
-        this.heroHealth = 100; // Saúde inicial do herói
+        this.heroHealth = 100;
         this.backgroundColor = backgroundColor;
         this.pathColor = pathColor;
         this.waveCount = waveCount;
         this.waveLength = waveLength;
 
-        // Define a cor de fundo do cenário
         root.setStyle("-fx-background-color: " + toHexString(backgroundColor) + ";");
     }
 

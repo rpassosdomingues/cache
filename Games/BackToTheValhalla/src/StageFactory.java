@@ -3,16 +3,16 @@ package src;
 import javafx.scene.paint.Color;
 
 public class StageFactory {
-    public static Scenario createStage(String stageName) {
-        switch (stageName) {
-            case "Stage 1":
-                return new Stage1(Color.GREEN, Color.BROWN, 1, 10); // Carrega Stage 1 com parâmetros
-            case "Stage 2":
-                return new Stage2(Color.RED, Color.LIGHTGRAY, 2, 5.0); // Carrega Stage 2 com parâmetros
-            case "Stage 3":
-                return new Stage3(Color.SKYBLUE, Color.WHITE, 2, 1.0); // Carrega Stage 3 com parâmetros
+    public static Scenario createStage(int stageNumber, Enemy.Difficulty difficulty) {
+        switch (stageNumber) {
+            case 1:
+                return new Stage(Color.BLUE, Color.GREEN, 5, 100, difficulty); // Passa a dificuldade
+            case 2:
+                return new Stage(Color.GREEN, Color.YELLOW, 7, 150, difficulty);
+            case 3:
+                return new Stage(Color.RED, Color.BLACK, 10, 200, difficulty);
             default:
-                return new Stage1(Color.GREEN, Color.BROWN, 1, 50.0); // Fallback para Stage 1
+                throw new IllegalArgumentException("Stage number not recognized.");
         }
     }
 }
