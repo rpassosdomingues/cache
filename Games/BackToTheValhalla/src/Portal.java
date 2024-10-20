@@ -14,7 +14,7 @@ public class Portal extends Circle {
         RadialGradient gradient = new RadialGradient(
                 0, 0, // proportional radius and center
                 0.5, 0.5, // center of the gradient
-                radius, // radius
+                radius * 2, // radius
                 true, // proportional
                 CycleMethod.REPEAT, // cycle method
                 new Stop(0, startColor), // start color

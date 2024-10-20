@@ -21,6 +21,7 @@ public class Main extends Application {
     private List<Enemy> enemies; // Lista de inimigos
     private Enemy.Difficulty selectedDifficulty; // Armazenar a dificuldade selecionada para o Inimigo
     private Pane gameArea; // Área do jogo
+    private BorderPane stageArea; // Declarando o layout do stage aqui
     private double heroX = 50; // Posição inicial do herói
     private double heroY = 300; // Posição inicial do herói
     private double speedMultiplier = 2; // Fator de multiplicação da velocidade
@@ -32,17 +33,18 @@ public class Main extends Application {
         enemies = new ArrayList<>(); // Inicializa a lista de inimigos
 
         // Cria a estrutura do layout
-        BorderPane layout = new BorderPane();
+        stageArea = new BorderPane();
+        stageArea.setPrefSize(600, 600);
         gameArea = new Pane();
-        gameArea.setPrefSize(500, 400);
+        gameArea.setPrefSize(600, 600);
     
         // Define a cor de fundo
         gameArea.setStyle("-fx-background-color: lightblue;"); // Cor de fundo da área do jogo
 
-        layout.setCenter(gameArea);
-        layout.setRight(createControlPanel()); // Painel de controle à direita
+        stageArea.setCenter(gameArea);
+        stageArea.setRight(createControlPanel()); // Painel de controle à direita
 
-        Scene scene = new Scene(layout, 800, 600);
+        Scene scene = new Scene(stageArea, 800, 600);
         primaryStage.setTitle("Back to the Valhalla");
         primaryStage.setScene(scene);
         primaryStage.show(); // Mostra a janela principal
@@ -98,23 +100,30 @@ public class Main extends Application {
                                             startButton, backButton);
 
         controlPanel.getChildren().addAll(new Label("New Game Options"), newGameLayout); // Add new game layout to control panel
-    }    
+    }
 
     private ComboBox<String> createStageSelection() {
+        // Cria um novo ComboBox para seleção de estágios
         ComboBox<String> stageSelection = new ComboBox<>();
-        stageSelection.getItems().addAll("Stage 1", "Stage 2", "Stage 3"); // Exemplo de estágios
-        stageSelection.setValue("Stage 1"); // Valor padrão
+
+        // Define a posição do ComboBox no stageArea
+        stageArea.setTop(stageSelection);
+
+        // Adiciona os itens (nomes dos estágios) no ComboBox
+        stageSelection.getItems().addAll("Stage 1", "Stage 2", "Stage 3");
+        stageSelection.setValue("Stage 1"); // Define o valor padrão (Stage 1)
 
         // Adiciona um listener para detectar mudanças na seleção
         stageSelection.setOnAction(event -> {
             // Obtém a string selecionada
             String selectedStage = stageSelection.getValue();
-        
+
             // Converte a string para o número do estágio
             int stageNumber = Integer.parseInt(selectedStage.split(" ")[1]); // Extrai o número do estágio
             selectStage(stageNumber); // Chama o método com o número do estágio
         });
 
+        // Retorna o ComboBox criado
         return stageSelection;
     }
 
@@ -128,24 +137,24 @@ public class Main extends Application {
     private Scenario currentScenario; // Mantenha uma referência ao cenário atual
 
     private void selectStage(int stageNumber) {
-        // Remove o cenário atual da área de jogo, se existir
+        // Remove o cenário atual, se existir
         if (currentScenario != null) {
-            gameArea.getChildren().remove(currentScenario.getRoot()); // Remove o root do cenário atual
-            currentScenario = null; // Limpa a referência para evitar conflitos
+            gameArea.getChildren().remove(currentScenario.getRoot());
+            currentScenario = null;
         }
 
-        // Define a dificuldade desejada
+        // Define a dificuldade
         Enemy.Difficulty difficulty = Enemy.Difficulty.EASY; // Altere conforme necessário
 
-        // Usa a StageFactory para criar o novo cenário
-        currentScenario = StageFactory.createStage(stageNumber, difficulty); // Cria um novo cenário
+        // Cria um novo cenário usando StageFactory
+        currentScenario = StageFactory.createStage(stageNumber, difficulty);
 
         // Log para depuração
         System.out.println("Carregando estágio " + stageNumber);
 
-        // Configura e adiciona o novo cenário na área de jogo
-        currentScenario.setup(); // Inicializa o novo cenário
-        gameArea.getChildren().add(currentScenario.getRoot()); // Adiciona o root do novo cenário na área de jogo
+        // Configura e adiciona o novo cenário
+        currentScenario.setup();
+        gameArea.getChildren().add(currentScenario.getRoot());
     }
 
     private void selectHero(String heroName) {
@@ -308,10 +317,12 @@ public class Main extends Application {
     }    
 
     private void exitGame() {
-        System.exit(0); // Fecha o jogo
+        // Fecha a janela do jogo
+        Stage stage = (Stage) controlPanel.getScene().getWindow();
+        stage.close();
     }
 
     public static void main(String[] args) {
-        launch(args); // Lança a aplicação
+        launch(args); // Inicia a aplicação JavaFX
     }
 }

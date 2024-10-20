@@ -1,17 +1,16 @@
 package src;
 
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.MoveTo;
+import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Scenario {
-    protected Pane root;
     protected List<Enemy> enemies;
     protected Hero hero;
     protected int heroHealth;
@@ -20,8 +19,9 @@ public abstract class Scenario {
     protected int waveCount;
     protected double waveLength;
 
+    StackPane root = new StackPane();
+
     public Scenario(Color backgroundColor, Color pathColor, int waveCount, double waveLength) {
-        this.root = new Pane();
         this.enemies = new ArrayList<>();
         this.heroHealth = 100;
         this.backgroundColor = backgroundColor;
@@ -29,10 +29,11 @@ public abstract class Scenario {
         this.waveCount = waveCount;
         this.waveLength = waveLength;
 
+        root.setPrefSize(600, 600); // Defina a largura e a altura desejadas.
         root.setStyle("-fx-background-color: " + toHexString(backgroundColor) + ";");
     }
 
-    public Pane getRoot() {
+    public StackPane getRoot() {
         return root;
     }
 
@@ -82,7 +83,6 @@ public abstract class Scenario {
         }
 
         root.getChildren().add(wavePath);
-        addPortals();
     }
 
     protected void initializeHero() {
@@ -102,10 +102,19 @@ public abstract class Scenario {
     }
 
     public void addPortals() {
-        double yPosition = root.getHeight() * 0.8;
-        Portal startPortal = new Portal(0, yPosition, 15, Color.RED, Color.BLUE);
-        Portal endPortal = new Portal(500, yPosition, 15, Color.BLUE, Color.RED);
-        root.getChildren().addAll(startPortal, endPortal);
+        double xPositionStart = 100.0; // X position do início do caminho
+        double xPositionEnd = 400.0; // X position do fim do caminho
+        double yPosition = 300.0; // Y position do caminho
+
+        // Portal no início do caminho
+        Portal startPortal = new Portal(xPositionStart, yPosition, 20, Color.RED, Color.BLUE);
+
+        // Portal no final do caminho (ajuste a posição X conforme necessário)
+        Portal endPortal = new Portal(xPositionEnd, yPosition, 20, Color.BLUE, Color.RED);
+
+        // Adiciona os portais ao StackPane, garantindo que fiquem no topo
+        root.getChildren().add(startPortal);
+        root.getChildren().add(endPortal);
     }
 
     private void startGameLoop() {
