@@ -22,11 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Main application class for the JavaFX application that interacts with a Neo4j database
- * to add, remove, and search for words. It also allows the user to select tags and display
- * practices associated with those tags.
+ * Classe principal da aplicação JavaFX que interage com um banco de dados Neo4j
+ * para adicionar, remover e buscar palavras. Ela também permite ao usuário selecionar tags 
+ * e exibir práticas associadas a essas tags.
  */
 public class Main extends Application {
+    
     // Declarando os painéis de controle e submenus da interface gráfica
     private VBox controlPanel;
     private VBox subMenuPanel;
@@ -40,18 +41,20 @@ public class Main extends Application {
     // Lista de tags selecionadas para busca de práticas
     private static List<String> selectedTags = new ArrayList<>();
 
-    // Método para buscar as práticas do Cerne com base nas tags selecionadas
+    /**
+     * Conecta ao banco de dados Neo4j, permitindo buscar práticas baseadas nas tags selecionadas.
+     */
     private List<Praticas> searchKeyPractices(List<String> selectedTags) {
         return Praticas.findByTags(selectedTags);
     }
 
     /**
-     * Neo4j Database Connector Class
-     * Conecta-se ao banco de dados Neo4j e gerencia as sessões
+     * Conector do banco de dados Neo4j, gerenciando as sessões de interação com o banco.
      */
     static class Neo4jConnector {
         private final Driver driver;
 
+        // Construtor para inicializar a conexão com o banco de dados Neo4j
         public Neo4jConnector(String uri, String user) {
             // Recupera a senha de autenticação do Neo4j a partir de variável de ambiente
             String password = System.getenv("NEO4J_PASSWORD");
@@ -167,7 +170,7 @@ public class Main extends Application {
         subMenuPanel.setSpacing(10);
 
         // Criação dos botões
-        criaBotoes();
+        criaBotoes(neo4jConnector);
 
         // Configura a estrutura dividida (painéis à esquerda e direita)
         splitPane.getItems().addAll(controlPanel, subMenuPanel);
@@ -192,25 +195,38 @@ public class Main extends Application {
         Scene scene = new Scene(splitPane, 1920, 1200);  // Defina o tamanho da janela conforme necessário
         primaryStage.setScene(scene);
         primaryStage.show();  // Exibe a janela
-
-        // Inicializa o ciclo de vida da aplicação JavaFX
-        public static void main(String[] args) {
-            launch(args);
-        }
     }
 
     /**
      * Método para adicionar botões ao painel de controle
      */
-    private void criaBotoes() {
-        adicionaBotao("Cadastrar Projeto", e -> Projeto.cadastraProjeto());
-        adicionaBotao("Agendar Evento", e -> Evento.agendaEvento());
-        adicionaBotao("Registrar Rodada de Monitoramento", e -> Monitoramento.registraRodadaMonitoramento());
-        adicionaBotao("Reservar Sala", e -> ReservaSala.reservaSala());
-        adicionaBotao("Solicitar Fabricação de Peça", e -> Maker.solicitaServicosMaker());
-        adicionaBotao("Registrar Prática Cerne", e -> Cerne.registraPraticaCerne());
-        adicionaBotao("Remover Prática Cerne", e -> removeNode());
-        adicionaBotao("Busca Prática Cerne", e -> searchNode());
+    private void criaBotoes(Neo4jConnector neo4jConnector) {
+        adicionaBotao("Cadastrar Projeto", e -> {
+            Projeto projeto = new Projeto(subMenuPanel);
+            projeto.cadastraProjeto();
+        });
+        adicionaBotao("Agendar Evento", e -> {
+            Evento evento = new Evento(subMenuPanel);
+            evento.agendaEvento();
+        });
+        adicionaBotao("Registrar Rodada de Monitoramento", e -> {
+            Monitoramento monitoramento = new Monitoramento(subMenuPanel);
+            monitoramento.registraRodadaMonitoramento();
+        });
+        adicionaBotao("Reservar Sala", e -> {
+            ReservaSala reservaSala = new ReservaSala(subMenuPanel);
+            reservaSala.reservaSala();
+        });
+        adicionaBotao("Solicitar Fabricação de Peça", e -> {
+            Maker maker = new Maker(subMenuPanel);
+            maker.solicitaServicosMaker();
+        });
+        adicionaBotao("Registrar Prática Cerne", e -> {
+            Cerne cerne = new Cerne(subMenuPanel);
+            cerne.registraPraticaCerne();
+        });
+        adicionaBotao("Remover Prática Cerne", e -> removeNode(neo4jConnector, "word", new Label()));
+        adicionaBotao("Busca Prática Cerne", e -> searchNode(neo4jConnector, "word", new Label()));
         adicionaBotao("Sair", e -> System.exit(0));
     }
 
@@ -224,5 +240,12 @@ public class Main extends Application {
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(10));
         controlPanel.getChildren().add(hBox);
+    }
+
+    /**
+     * Método principal para rodar a aplicação
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 }
