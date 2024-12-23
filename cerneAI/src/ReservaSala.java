@@ -4,6 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+
 public abstract class ReservaSala {
     protected String solicitante;
     protected LocalDateTime dataHoraInicio;
@@ -11,19 +18,13 @@ public abstract class ReservaSala {
     protected String descricaoReserva;
 
     // Lista privada para armazenar as reservas
-    private static List<Reserva> reservas = new ArrayList<>();
+    private static List<ReservaSala> reservas = new ArrayList<>();
 
-    public Reserva(String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim, String descricaoReserva) {
+    public ReservaSala(String solicitante, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim, String descricaoReserva) {
         this.solicitante = solicitante;
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFim = dataHoraFim;
         this.descricaoReserva = descricaoReserva;
-    }
-
-    // Método para cadastrar a reserva
-    public void cadastraReserva() {
-        reservas.add(this); // Adiciona a instância atual à lista de reservas
-        System.out.println("Reserva cadastrada com sucesso!");
     }
 
     public String getSolicitante() {
@@ -42,10 +43,18 @@ public abstract class ReservaSala {
         return descricaoReserva;
     }
 
-    // Metodo para obter todas as reservas
-    public static List<Reserva> getReservas() {
+    // Método para obter todas as reservas
+    public static List<ReservaSala> getReservas() {
         return reservas;
     }
+
+    // Método para adicionar reserva à lista
+    public static void adicionarReserva(ReservaSala reserva) {
+        reservas.add(reserva);
+    }
+
+    // Método abstrato para ser implementado pelas subclasses
+    public abstract void exibirDetalhesReserva();
 
     // Janela de Reserva de Sala
     private void reservaSala() {
@@ -59,14 +68,18 @@ public abstract class ReservaSala {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(15));
 
+        // Botão para reservar sala de reuniões
         Button btnReuniao = new Button("Sala de Reuniões");
-        btnReuniao.setOnAction(e -> reservaSalaReunioes());
+        btnReuniao.setOnAction(e -> reservaSalaReunioes()); // Chama o método para reserva de salas de reuniões
 
+        // Botão para reservar coworking
         Button btnCoworking = new Button("Coworking");
-        btnCoworking.setOnAction(e -> reservaCoworking());
+        btnCoworking.setOnAction(e -> reservaCoworking()); // Chama o método para reserva de coworking
 
+        // Adiciona os botões à VBox
         vbox.getChildren().addAll(btnReuniao, btnCoworking);
 
-        subMenuPanel.getChildren().add(vbox); // Adiciona o vbox à área de subMenu
+        // Adiciona o vbox à área de subMenu
+        subMenuPanel.getChildren().add(vbox);
     }
 }
