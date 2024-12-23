@@ -1,5 +1,6 @@
 package src;
 
+import src.Praticas;
 import org.neo4j.driver.*;
 
 import javafx.application.Application;
@@ -9,27 +10,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.List;
-
-import src.Praticas;
-
-import javafx.geometry.Insets;
-import javafx.scene.layout.GridPane;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.geometry.Insets;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
-import javafx.stage.Stage;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main application class for the JavaFX application that interacts with a Neo4j database
@@ -37,79 +27,66 @@ import java.time.LocalDateTime;
  * practices associated with those tags.
  */
 public class Main extends Application {
-    // Inicializa os Painéis da interface
+    // Declarando os painéis de controle e submenus da interface gráfica
     private VBox controlPanel;
     private VBox subMenuPanel;
-    // Declare the 'state' variable at the class level
-    private boolean state = true;  // This will enable buttons by default
-    // Inicializa a lista de solicitações de serviços do Maker
+
+    // Variável de estado para controle do fluxo de botões
+    private boolean state = true;
+
+    // Lista de peças (Maker), para futura utilização
     private ArrayList<Maker> pecas;
-    // Inicializa a lista de TAG's para identificação de práticas do Cerne
+
+    // Lista de tags selecionadas para busca de práticas
     private static List<String> selectedTags = new ArrayList<>();
-    // Inicializa a lista de práticas do Cerne
+
+    // Método para buscar as práticas do Cerne com base nas tags selecionadas
     private List<Praticas> searchKeyPractices(List<String> selectedTags) {
-        // Chama o método findByTags da classe Praticas para encontrar as práticas associadas às tags selecionadas
         return Praticas.findByTags(selectedTags);
     }
+
     /**
      * Neo4j Database Connector Class
-     * This class manages the connection to the Neo4j database.
+     * Conecta-se ao banco de dados Neo4j e gerencia as sessões
      */
     static class Neo4jConnector {
         private final Driver driver;
 
-        /**
-         * Constructor to initialize the connection to the Neo4j database.
-         *
-         * @param uri  URI for the Neo4j database connection (e.g., bolt://localhost:7687).
-         * @param user The username for the Neo4j database authentication.
-         */
         public Neo4jConnector(String uri, String user) {
-            // Retrieve the Neo4j password from the environment variable
+            // Recupera a senha de autenticação do Neo4j a partir de variável de ambiente
             String password = System.getenv("NEO4J_PASSWORD");
             if (password == null) {
                 throw new IllegalStateException("NEO4J_PASSWORD environment variable is not set!");
             }
-            // Create the driver to connect to Neo4j
             this.driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
         }
 
-        /**
-         * Returns a session for interacting with the Neo4j database.
-         *
-         * @return A session to interact with the database.
-         */
+        // Retorna uma nova sessão para interações com o banco de dados
         public Session getSession() {
             return driver.session();
         }
 
-        /**
-         * Closes the connection to the Neo4j database.
-         */
+        // Fecha a conexão com o banco de dados
         public void close() {
             driver.close();
-        }    
+        }
     }
 
     /**
-     * Adds a word to the Neo4j database.
-     *
-     * @param neo4jConnector The Neo4jConnector instance to interact with the database.
-     * @param word           The word to add to the database.
-     * @param resultLabel    The label where the result message will be displayed.
+     * Método para adicionar uma palavra ao banco de dados Neo4j
      */
     private void insertNode(Neo4jConnector neo4jConnector, String word, Label resultLabel) {
         try (Session session = neo4jConnector.getSession()) {
-            word = word.toLowerCase();  // Ensure case-insensitivity for word comparison
+            word = word.toLowerCase();  // Garante que a busca seja insensível a maiúsculas/minúsculas
 
-            // Query to check if the word already exists in the database
+            // Verifica se a palavra já existe no banco
             String queryCheck = "MATCH (w:Word {name: $name}) RETURN w";
             Result resultCheck = session.run(queryCheck, Values.parameters("name", word));
 
+            // Se a palavra já existir, avisa o usuário, senão cria um novo nó
             if (resultCheck.hasNext()) {
                 resultLabel.setText("The word '" + word + "' already exists.");
             } else {
-                // Add the word if it doesn't already exist
                 String queryAdd = "CREATE (w:Word {name: $name})";
                 session.run(queryAdd, Values.parameters("name", word));
                 resultLabel.setText("Word '" + word + "' added.");
@@ -121,22 +98,18 @@ public class Main extends Application {
     }
 
     /**
-     * Removes a word from the Neo4j database.
-     *
-     * @param neo4jConnector The Neo4jConnector instance to interact with the database.
-     * @param word           The word to remove from the database.
-     * @param resultLabel    The label where the result message will be displayed.
+     * Método para remover uma palavra do banco de dados Neo4j
      */
     private void removeNode(Neo4jConnector neo4jConnector, String word, Label resultLabel) {
         try (Session session = neo4jConnector.getSession()) {
-            word = word.toLowerCase();  // Ensure case-insensitivity for word comparison
+            word = word.toLowerCase();
 
-            // Query to check if the word exists
+            // Verifica se a palavra existe no banco
             String queryCheck = "MATCH (w:Word {name: $name}) RETURN w";
             Result resultCheck = session.run(queryCheck, Values.parameters("name", word));
 
+            // Se a palavra existir, remove o nó, senão avisa que não foi encontrada
             if (resultCheck.hasNext()) {
-                // Remove the word if it exists in the database
                 String queryDelete = "MATCH (w:Word {name: $name}) DELETE w";
                 session.run(queryDelete, Values.parameters("name", word));
                 resultLabel.setText("Word '" + word + "' removed.");
@@ -150,21 +123,17 @@ public class Main extends Application {
     }
 
     /**
-     * Searches for a word in the Neo4j database.
-     *
-     * @param neo4jConnector The Neo4jConnector instance to interact with the database.
-     * @param word           The word to search for in the database.
-     * @param resultLabel    The label where the result message will be displayed.
+     * Método para buscar uma palavra no banco de dados Neo4j
      */
     private void searchNode(Neo4jConnector neo4jConnector, String word, Label resultLabel) {
         try (Session session = neo4jConnector.getSession()) {
-            word = word.toLowerCase();  // Ensure case-insensitivity for search
+            word = word.toLowerCase();
 
-            // Query to check if the word exists
+            // Executa a consulta para encontrar a palavra
             String query = "MATCH (w:Word {name: $name}) RETURN w";
             Result result = session.run(query, Values.parameters("name", word));
 
-            // Display the result message based on whether the word is found
+            // Verifica se a palavra foi encontrada e atualiza a interface
             if (result.hasNext()) {
                 resultLabel.setText("Word '" + word + "' found.");
             } else {
@@ -177,126 +146,41 @@ public class Main extends Application {
     }
 
     /**
-     * Initializes and starts the JavaFX application window.
-     *
-     * @param primaryStage The primary stage for the JavaFX application.
+     * Inicializa e configura a interface gráfica do JavaFX
      */
     @Override
     public void start(Stage primaryStage) {
-        // Criando a conexão com o Neo4j
+        // Conecta ao banco de dados Neo4j
         Neo4jConnector neo4jConnector = new Neo4jConnector("bolt://localhost:7687", "neo4j");
 
-        // Criando os botões de ação
-        Button inserePraticaCerne = new Button("Registrar Prática");
-        Button removePraticaCerne = new Button("Remover Prática");
-        Button buscaPraticaCerne = new Button("Buscar Prática");
+        primaryStage.setTitle("CERNEBot");
 
-        // Criando o campo de texto para entrada da palavra
-        TextField wordInput = new TextField();
-        wordInput.setPromptText("Enter word");
-        wordInput.setVisible(false);  // Inicialmente invisível
-
-        // Rótulo para exibir os resultados das operações
-        Label resultLabel = new Label();
-
-        // Layout principal: HBox organiza os componentes horizontalmente
-        HBox layout = new HBox(20);  // Espaçamento de 20 entre os elementos
-
-        // Painel à esquerda com os botões de ação
-        VBox leftPanel = new VBox(10, inserePraticaCerne, removePraticaCerne, buscaPraticaCerne);
-        leftPanel.setAlignment(Pos.CENTER);  // Centraliza os botões na coluna
-
-        // Painel à direita com o campo de texto e o rótulo de resultados
-        VBox rightPanel = new VBox(10, wordInput, resultLabel);  // Add the word input field and result label here
-        rightPanel.setAlignment(Pos.CENTER);  // Center the input field and label vertically
-
-        // Variável para armazenar a operação atual (add, remove, search)
-        final String[] operation = {""};
-
-        pecas = new ArrayList<>(); // Inicializando a lista
-            primaryStage.setTitle("CERNEBot");
-
-            SplitPane splitPane = new SplitPane(); // Usando SplitPane para dividir a janela
-            // Definindo a posição do divisor (0.35 significa 35% da largura para controlPanel)
-            splitPane.setDividerPositions(0.35);
-
-            controlPanel = new VBox(10);
-            controlPanel.setPadding(new Insets(15));
-
-            subMenuPanel = new VBox(); // Área para exibir os detalhes
-            subMenuPanel.setPadding(new Insets(15));
-            subMenuPanel.setSpacing(10);
-
-            // Criando os botões
-            criaBotoes();
-
-            splitPane.getItems().addAll(controlPanel, subMenuPanel);
-
-            // Adicionando o SplitPane à cena
-            Scene scene = new Scene(splitPane, 1920, 1200); // Defina o tamanho da janela conforme necessário
-            primaryStage.setScene(scene);
-            primaryStage.show(); // Mostra a janela
-        }
-
-        private void criaBotoes() {
-            // Definindo os botões e adicionando ao painel de controle
-            adicionaBotao("Cadastrar Projeto", e -> Projeto.cadastraProjeto());
-            adicionaBotao("Agendar Evento", e -> Evento.agendaEvento());
-            adicionaBotao("Registrar Rodada de Monitoramento", e -> Monitoramento.registraRodadaMonitoramento());
-            adicionaBotao("Reservar Sala", e -> ReservaSala.reservaSala());
-            adicionaBotao("Solicitar Fabricação de Peça", e -> Maker.solicitaServicosMaker());
-            adicionaBotao("Registrar Prática Cerne", e -> Cerne.registraPraticaCerne());
-            adicionaBotao("Sair", e -> System.exit(0));
-        }
-
-        private void adicionaBotao(String texto, EventHandler<ActionEvent> evento) {
-            Button button = new Button(texto);
-            button.setOnAction(evento);
-            HBox hBox = new HBox(button);
-            hBox.setAlignment(Pos.CENTER);
-            hBox.setPadding(new Insets(10));
-            controlPanel.getChildren().add(hBox);
-        }
-
-        // Definindo ação para o botão de adicionar nó
-        inserePraticaCerne.setOnAction(e -> {
-            wordInput.setVisible(true);  // Torna o campo de texto visível para a entrada de palavras
-            resultLabel.setText("");     // Limpa o rótulo de resultados
-            operation[0] = "add";       // Define a operação como "add"
-            toggleButtons(false, inserePraticaCerne, removePraticaCerne, buscaPraticaCerne);  // Desativa os outros botões
-        });
-
-        // Definindo ação para o botão de remover nó
-        removePraticaCerne.setOnAction(e -> {
-            wordInput.setVisible(true);
-            resultLabel.setText("");   
-            operation[0] = "remove";
-            toggleButtons(false, inserePraticaCerne, removePraticaCerne, buscaPraticaCerne);
-        });
-
-        // Definindo ação para o botão de buscar nó
-        buscaPraticaCerne.setOnAction(e -> {
-            wordInput.setVisible(true);
-            resultLabel.setText("");   
-            operation[0] = "search";
-            toggleButtons(false, inserePraticaCerne, removePraticaCerne, buscaPraticaCerne);
-        });
-
-        // Usando SplitPane para dividir a janela
+        // Divisória de tela
         SplitPane splitPane = new SplitPane();
-        // Definindo a posição do divisor (0.35 significa 35% da largura para controlPanel)
-        splitPane.setDividerPositions(0.35);
-        splitPane.getItems().addAll(leftPanel, rightPanel);
+        splitPane.setDividerPositions(0.35);  // Configura a proporção da divisória
 
-        // Instancia as classes, passando o painel 'subMenuPanel' para manipulação do painel de controle
-        Projeto cadastraProjeto = new Projeto(root);
-        Evento agendaEvento = new Evento(root);
-        Monitoramento registraRodadaMonitoramento = new Monitoramento(root);
-        ReservaSala reservaSala = new ReservaSala(root);
-        Maker solicitaServicosMaker = new Maker(root);
-        Cerne registraPraticaCerne = new Cerne(root);
-        
-        // Chama os métodos de configuração das interfaces incorporadas na janela à direita
+        // Painéis de controle e submenu
+        controlPanel = new VBox(10);
+        controlPanel.setPadding(new Insets(15));
+        subMenuPanel = new VBox();
+        subMenuPanel.setPadding(new Insets(15));
+        subMenuPanel.setSpacing(10);
+
+        // Criação dos botões
+        criaBotoes();
+
+        // Configura a estrutura dividida (painéis à esquerda e direita)
+        splitPane.getItems().addAll(controlPanel, subMenuPanel);
+
+        // Instancia as classes para configurar as interfaces
+        Projeto cadastraProjeto = new Projeto(subMenuPanel);
+        Evento agendaEvento = new Evento(subMenuPanel);
+        Monitoramento registraRodadaMonitoramento = new Monitoramento(subMenuPanel);
+        ReservaSala reservaSala = new ReservaSala(subMenuPanel);
+        Maker solicitaServicosMaker = new Maker(subMenuPanel);
+        Cerne registraPraticaCerne = new Cerne(subMenuPanel);
+
+        // Chama os métodos de configuração das interfaces incorporadas
         cadastraProjeto.cadastraProjeto();
         agendaEvento.agendaEvento();
         registraRodadaMonitoramento.registraRodadaMonitoramento();
@@ -304,16 +188,41 @@ public class Main extends Application {
         solicitaServicosMaker.solicitaServicosMaker();
         registraPraticaCerne.registraPraticaCerne();
 
-        // Adicionando o SplitPane à cena
-        Scene scene = new Scene(splitPane, 1920, 1200); // Defina o tamanho da janela conforme necessário
+        // Configura a cena e a janela
+        Scene scene = new Scene(splitPane, 1920, 1200);  // Defina o tamanho da janela conforme necessário
         primaryStage.setScene(scene);
-        primaryStage.show(); // Mostra a janela
+        primaryStage.show();  // Exibe a janela
+
+        // Inicializa o ciclo de vida da aplicação JavaFX
+        public static void main(String[] args) {
+            launch(args);
+        }
     }
 
     /**
-     * Main method to launch the application.
+     * Método para adicionar botões ao painel de controle
      */
-    public static void main(String[] args) {
-        launch(args);
+    private void criaBotoes() {
+        adicionaBotao("Cadastrar Projeto", e -> Projeto.cadastraProjeto());
+        adicionaBotao("Agendar Evento", e -> Evento.agendaEvento());
+        adicionaBotao("Registrar Rodada de Monitoramento", e -> Monitoramento.registraRodadaMonitoramento());
+        adicionaBotao("Reservar Sala", e -> ReservaSala.reservaSala());
+        adicionaBotao("Solicitar Fabricação de Peça", e -> Maker.solicitaServicosMaker());
+        adicionaBotao("Registrar Prática Cerne", e -> Cerne.registraPraticaCerne());
+        adicionaBotao("Remover Prática Cerne", e -> removeNode());
+        adicionaBotao("Busca Prática Cerne", e -> searchNode());
+        adicionaBotao("Sair", e -> System.exit(0));
+    }
+
+    /**
+     * Método auxiliar para adicionar um botão à interface
+     */
+    private void adicionaBotao(String texto, EventHandler<ActionEvent> evento) {
+        Button button = new Button(texto);
+        button.setOnAction(evento);
+        HBox hBox = new HBox(button);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setPadding(new Insets(10));
+        controlPanel.getChildren().add(hBox);
     }
 }
