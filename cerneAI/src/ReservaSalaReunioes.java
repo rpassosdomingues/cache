@@ -25,19 +25,13 @@ public class ReservaSalaReunioes extends Reserva {
         return necessitaTransmissao;
     }
 
-    // Método para cadastrar a reserva de sala de reuniões
-    public void cadastrarReservaSalaReunioes() {
-        reservasSalaReunioes.add(this); // Adiciona a instância atual à lista de reservas de sala de reuniões
-        System.out.println("Reserva de sala de reuniões cadastrada com sucesso!");
-    }
-
     // Método para obter todas as reservas de salas de reuniões
     public static List<ReservaSalaReunioes> getReservasSalaReunioes() {
         return reservasSalaReunioes;
     }
 
     // Método para abrir a janela de Reserva de Sala de Reuniões
-    private void abrirSalaReunioes() {
+    private void reservaSalaReunioes() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
 

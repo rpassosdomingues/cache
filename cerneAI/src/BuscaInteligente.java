@@ -16,7 +16,7 @@ import java.util.Map;
  * Main class for managing and displaying tags associated with practices.
  * This system allows the selection of tags and displays the practices associated with those tags.
  */
-public class TagSearch {
+public class BuscaInteligente {
 
     // Map to store tags and their associated practices
     private static final Map<String, List<Praticas>> tagToPracticesMap = new HashMap<>();

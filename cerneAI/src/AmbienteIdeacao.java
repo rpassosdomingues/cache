@@ -20,7 +20,7 @@ public class AmbienteIdeacao {
     }
 
     // Método para cadastrar um novo ambiente de ideação
-    public void cadastrarAmbienteIdeacao(AmbienteIdeacao ambienteIdeacao) {
+    public void cadastraAmbienteIdeacao(AmbienteIdeacao ambienteIdeacao) {
         ambientesIdeacao.add(ambienteIdeacao); // Adiciona o ambiente à lista
         System.out.println("Ambiente de Ideação cadastrado com sucesso!");
     }

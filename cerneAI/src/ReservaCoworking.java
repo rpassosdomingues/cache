@@ -31,7 +31,7 @@ public class ReservaCoworking extends Reserva {
     }
 
     // Método para abrir a janela de Reserva de Coworking
-    private void abrirCoworking() {
+    private void reservaCoworking() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
 

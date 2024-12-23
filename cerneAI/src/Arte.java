@@ -77,13 +77,13 @@ public class Arte extends DICOM {
     }
 
     // Metodo para adicionar um anexo de arte
-    public void adicionarArteAnexo(String arte) {
+    public void adicionaArte(String arte) {
         arteAnexo.add(arte);
         System.out.println("Anexo de arte adicionado com sucesso!");
     }
 
     // Metodo para adicionar um anexo de legenda
-    public void adicionarLegendaAnexo(String legenda) {
+    public void adicionaLegenda(String legenda) {
         legendaAnexo.add(legenda);
         System.out.println("Anexo de legenda adicionado com sucesso!");
     }

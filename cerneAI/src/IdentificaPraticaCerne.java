@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchKeyPractices {
+public class IdentificaPraticaCerne {
 
     private static List<String> selectedTags = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class SearchKeyPractices {
         VBox tagPanel = new VBox(10);
         tagPanel.setAlignment(Pos.TOP_LEFT);
 
-        List<String> tags = TagSearch.getAllTags();
+        List<String> tags = BuscaInteligente.getAllTags();
 
         // GridPane para organizar os checkboxes em colunas
         GridPane grid = new GridPane();
@@ -44,8 +44,8 @@ public class SearchKeyPractices {
         }
 
         // Botão para pesquisar as práticas chave associadas às tags selecionadas
-        Button searchKeyPracticesButton = new Button("Search Key Practices");
-        searchKeyPracticesButton.setOnAction(e -> {
+        Button identificaPraticaCerne = new Button("Search Key Practices");
+        identificaPraticaCerne.setOnAction(e -> {
             selectedTags.clear();
             grid.getChildren().stream()
                 .filter(node -> node instanceof CheckBox && ((CheckBox) node).isSelected())
@@ -53,13 +53,13 @@ public class SearchKeyPractices {
                 .forEach(selectedTags::add);
 
             // Busca as práticas chave associadas às tags selecionadas
-            List<Praticas> foundPractices = TagSearch.findPracticesByTags(selectedTags);
+            List<Praticas> foundPractices = BuscaInteligente.findPracticesByTags(selectedTags);
             System.out.println("Key Practices associated with selected tags: " + foundPractices);
 
             // Aqui você pode implementar a lógica para exibir as práticas encontradas na interface gráfica
         });
 
-        tagPanel.getChildren().addAll(grid, searchKeyPracticesButton);
+        tagPanel.getChildren().addAll(grid, identificaPraticaCerne);
         return tagPanel;
     }
 

@@ -17,7 +17,7 @@ public class ResponsabilidadeSocial {
     }
 
     // Método para cadastrar uma nova responsabilidade social
-    public void cadastrarResponsabilidadeSocial(ResponsabilidadeSocial responsabilidadeSocial) {
+    public void cadastraAcaoResponsabilidadeSocial(ResponsabilidadeSocial responsabilidadeSocial) {
         responsabilidadesSociais.add(responsabilidadeSocial);
         System.out.println("Responsabilidade Social cadastrada com sucesso!");
     }
@@ -33,12 +33,12 @@ public class ResponsabilidadeSocial {
     }
 
     // Método para agendar ação social
-    public void agendarAcaoSocial(String data) {
+    public void agendaAcaoSocial(String data) {
         System.out.println("Ação social '" + projetoSocial + "' agendada para " + data);
     }
 
     // Método para listar todas as responsabilidades sociais cadastradas
-    public static void listarResponsabilidadesSociais() {
+    public static void listarAcoesResponsabilidadeSocial() {
         for (ResponsabilidadeSocial resp : responsabilidadesSociais) {
             System.out.println("Projeto Social: " + resp.getProjetoSocial() + ", Impacto: " + resp.getImpacto());
         }

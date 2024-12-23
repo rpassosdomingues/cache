@@ -20,7 +20,7 @@ public class Cerne {
     }
 
     // Método para identificar prática chave
-    public void registrarPraticaCerne() {
+    public void registraPraticaCerne() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
 
@@ -58,7 +58,7 @@ public class Cerne {
                 String participantes = campoParticipantes.getText();
 
                 // Transfere para a tela de seleção de tags
-                abrirSelecaoTags(titleLabel, acao, abordagem, participantes);
+                abrePainelSelecaoTags(titleLabel, acao, abordagem, participantes);
 
                 // Limpa os campos de texto
                 campoAcao.clear();
@@ -81,7 +81,7 @@ public class Cerne {
     }
 
     // Método auxiliar para abrir a tela de seleção de tags
-    private void abrirSelecaoTags(Label titleLabel, String acao, String abordagem, String participantes) {
+    private void abrePainelSelecaoTags(Label titleLabel, String acao, String abordagem, String participantes) {
         VBox painelSelecaoTags = SearchKeyPractices.createTagSelectionPanel();
 
         // Adiciona a funcionalidade de salvar as informações na lista final

@@ -7,7 +7,7 @@ public class GestaoEstrategica {
     private String objetivo;
 
     // Lista estática para armazenar todas as gestões estratégicas
-    private static List<GestaoEstrategica> gestoesEstrategicas = new ArrayList<>();
+    private static List<GestaoEstrategica> acoesGestaoEstrategica = new ArrayList<>();
 
     // Construtor
     public GestaoEstrategica(String objetivo) {
@@ -20,14 +20,14 @@ public class GestaoEstrategica {
     }
 
     // Método para cadastrar uma nova gestão estratégica
-    public void cadastrarGestaoEstrategica(GestaoEstrategica gestaoEstrategica) {
-        gestoesEstrategicas.add(gestaoEstrategica);
+    public void cadastraGestaoEstrategica(GestaoEstrategica gestaoEstrategica) {
+        acoesGestaoEstrategica.add(gestaoEstrategica);
         System.out.println("Gestão Estratégica cadastrada com sucesso!");
     }
 
     // Método para listar todas as gestões estratégicas cadastradas
-    public static void listarGestoesEstrategicas() {
-        for (GestaoEstrategica gestao : gestoesEstrategicas) {
+    public static void listaAcoesGestaoEstrategica() {
+        for (GestaoEstrategica gestao : acoesGestaoEstrategica) {
             System.out.println("Objetivo: " + gestao.getObjetivo());
         }
     }

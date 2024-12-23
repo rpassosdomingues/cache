@@ -4,10 +4,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class CSVHandler {
+public class ExportaDados {
 
     // Método genérico para salvar qualquer tipo de dado no CSV
-    public static <T> void salvarDadosCSV(String nomeArquivo, List<T> dados, String[] cabecalhos) {
+    public static <T> void exportaDadosCSV(String nomeArquivo, List<T> dados, String[] cabecalhos) {
         try (FileWriter writer = new FileWriter(nomeArquivo, true)) {
             // Se o arquivo estiver vazio, escrever o cabeçalho
             if (dados.size() == 1) {

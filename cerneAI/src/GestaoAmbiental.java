@@ -17,7 +17,7 @@ public class GestaoAmbiental {
     }
 
     // Método para cadastrar uma nova gestão ambiental
-    public void cadastrarGestaoAmbiental(GestaoAmbiental gestaoAmbiental) {
+    public void cadastraGestaoAmbiental(GestaoAmbiental gestaoAmbiental) {
         gestoesAmbientais.add(gestaoAmbiental);
         System.out.println("Gestão Ambiental cadastrada com sucesso!");
     }
@@ -33,12 +33,12 @@ public class GestaoAmbiental {
     }
 
     // Método para agendar uma ação ambiental
-    public void agendarAcao(String data) {
+    public void agendaAcaoGestaoAmbiental(String data) {
         System.out.println("Ação ambiental '" + acao + "' agendada para " + data);
     }
 
     // Método para listar todas as gestões ambientais cadastradas
-    public static void listarGestoesAmbientais() {
+    public static void listaAcoesGestaoAmbiental() {
         for (GestaoAmbiental gestao : gestoesAmbientais) {
             System.out.println("Ação: " + gestao.getAcao() + ", Impacto: " + gestao.getImpacto());
         }

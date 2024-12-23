@@ -21,7 +21,7 @@ public abstract class ReservaSala {
     }
 
     // Método para cadastrar a reserva
-    public void cadastrarReserva() {
+    public void cadastraReserva() {
         reservas.add(this); // Adiciona a instância atual à lista de reservas
         System.out.println("Reserva cadastrada com sucesso!");
     }
@@ -48,7 +48,7 @@ public abstract class ReservaSala {
     }
 
     // Janela de Reserva de Sala
-    private void reservarSala() {
+    private void reservaSala() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
 
@@ -60,10 +60,10 @@ public abstract class ReservaSala {
         vbox.setPadding(new Insets(15));
 
         Button btnReuniao = new Button("Sala de Reuniões");
-        btnReuniao.setOnAction(e -> abrirSalaReunioes());
+        btnReuniao.setOnAction(e -> reservaSalaReunioes());
 
         Button btnCoworking = new Button("Coworking");
-        btnCoworking.setOnAction(e -> abrirCoworking());
+        btnCoworking.setOnAction(e -> reservaCoworking());
 
         vbox.getChildren().addAll(btnReuniao, btnCoworking);
 
