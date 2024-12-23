@@ -1,122 +1,102 @@
 package src;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class Monitoramento {
-    private EmpresaIncubada empresaIncubada;
-    private LocalDateTime dataHora;
-    private List<String> documentosPendentes; // Lista de documentos pendentes
-    private String arquivo; // Nome ou caminho do arquivo Excel com dados de notas, evolução, etc.
 
-    // Lista estática para armazenar os monitoramentos
-    private static List<Monitoramento> monitoramentos = new ArrayList<>();
-
-    // Painel do submenu (declarado como variável de instância)
     private VBox subMenuPanel;
 
     // Construtor
-    public Monitoramento(EmpresaIncubada empresaIncubada, LocalDateTime dataHora, List<String> documentosPendentes, String arquivo) {
-        this.empresaIncubada = empresaIncubada;
-        this.dataHora = dataHora;
-        this.documentosPendentes = documentosPendentes;
-        this.arquivo = arquivo;
-
-        // Inicializa o painel de submenu
-        this.subMenuPanel = new VBox();
+    public Monitoramento(VBox subMenuPanel) {
+        this.subMenuPanel = subMenuPanel;
     }
 
-    // Getters
-    public EmpresaIncubada getEmpresaIncubada() {
-        return empresaIncubada;
-    }
+    // Método para exibir o formulário de monitoramento
+    public void exibirFormularioMonitoramento() {
+        subMenuPanel.getChildren().clear();
+        subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;");
 
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-
-    public List<String> getDocumentosPendentes() {
-        return documentosPendentes;
-    }
-
-    public String getArquivo() {
-        return arquivo;
-    }
-
-    // Janela de Registro de Rodade de Monitoramento
-    private void registraRodadaMonitoramento() {
-        subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
-        subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
-
-        Label titleLabel = new Label("Registrar Rodada de Monitoramento");
-        titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;"); // Estilo do título
-        subMenuPanel.getChildren().add(titleLabel); // Adiciona o título ao painel
-
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(15));
-
-        Label lblEmpresa = new Label("Escolha a empresa:");
-        Button btnPolygon = new Button("Polygon");
-        Button btnICRO = new Button("ICRO Digital");
-        Button btnSMART = new Button("SMARTComerci");
-        Button btnILegis = new Button("iLegis");
-
-        btnPolygon.setOnAction(e -> relatorioMonitoramento("Polygon"));
-        btnICRO.setOnAction(e -> relatorioMonitoramento("ICRO Digital"));
-        btnSMART.setOnAction(e -> relatorioMonitoramento("SMARTComerci"));
-        btnILegis.setOnAction(e -> relatorioMonitoramento("iLegis"));
-
-        vbox.getChildren().addAll(lblEmpresa, btnPolygon, btnICRO, btnSMART, btnILegis);
-
-        subMenuPanel.getChildren().add(vbox); // Adiciona o VBox à área de subMenu
-    }
-
-    // Submenu de Detalhes de Monitoramento
-    private void relatorioMonitoramento(String empresa) {
-        subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
-        subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
-
-        Label titleLabel = new Label("Monitoramento " + empresa);
-        titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;"); // Estilo do título
-        subMenuPanel.getChildren().add(titleLabel); // Adiciona o título ao painel
+        Label titleLabel = new Label("Formulário de Monitoramento");
+        titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        subMenuPanel.getChildren().add(titleLabel);
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(15));
         grid.setVgap(10);
         grid.setHgap(10);
 
-        Label lblDataHora = new Label("Data e Hora:");
-        DatePicker dataHora = new DatePicker();
+        // Campos do formulário
+        Label lblData = new Label("Data de Realização:");
+        DatePicker dataPicker = new DatePicker();
+        grid.add(lblData, 0, 0);
+        grid.add(dataPicker, 1, 0);
 
-        Label lblDocumento = new Label("Upload de Documento:");
-        Button btnUpload = new Button("Upload PDF");
+        Label lblResponsavel = new Label("Responsável pelo Monitoramento:");
+        TextField txtResponsavel = new TextField();
+        grid.add(lblResponsavel, 0, 1);
+        grid.add(txtResponsavel, 1, 1);
 
-        Button btnSalvar = new Button("Salvar");
+        Label lblSocios = new Label("Sócios:");
+        TextField txtSocios = new TextField();
+        grid.add(lblSocios, 0, 2);
+        grid.add(txtSocios, 1, 2);
+
+        // Estágio de Desenvolvimento da Solução
+        Label lblEstagio = new Label("Estágio de Desenvolvimento da Solução:");
+        ComboBox<String> cbEstagio = new ComboBox<>();
+        cbEstagio.getItems().addAll("1: MVP não oferecido amplamente", "2: Produto concluído, mas sem clientes pagantes", "3: Produto concluído com clientes pagantes");
+        grid.add(lblEstagio, 0, 3);
+        grid.add(cbEstagio, 1, 3);
+
+        // Análise de Diferenciais Competitivos
+        Label lblDiferenciais = new Label("Análise de Diferenciais Competitivos:");
+        ComboBox<String> cbDiferenciais = new ComboBox<>();
+        cbDiferenciais.getItems().addAll("1: Não há análise", "2: Análise desatualizada", "3: Análise atualizada");
+        grid.add(lblDiferenciais, 0, 4);
+        grid.add(cbDiferenciais, 1, 4);
+
+        // Desenvolvimento de Portfólio
+        Label lblPortifolio = new Label("Desenvolvimento de Portfólio e/ou Melhorias:");
+        ComboBox<String> cbPortifolio = new ComboBox<>();
+        cbPortifolio.getItems().addAll("1: Não há novos produtos", "2: Novos produtos definidos", "3: Produtos em desenvolvimento", "4: Produtos e melhorias concluídas");
+        grid.add(lblPortifolio, 0, 5);
+        grid.add(cbPortifolio, 1, 5);
+
+        // Conhecimentos sobre Propriedade Intelectual
+        Label lblPropriedadeIntelectual = new Label("Conhecimento sobre Propriedade Intelectual:");
+        ComboBox<String> cbPropriedadeIntelectual = new ComboBox<>();
+        cbPropriedadeIntelectual.getItems().addAll("1: Não possui conhecimento", "2: Conhecimento superficial", "3: Conhecimento adquirido em cursos", "4: Registro iniciado");
+        grid.add(lblPropriedadeIntelectual, 0, 6);
+        grid.add(cbPropriedadeIntelectual, 1, 6);
+
+        // Adequação do Processo Produtivo
+        Label lblProcessoProdutivo = new Label("Adequação do Processo Produtivo:");
+        ComboBox<String> cbProcessoProdutivo = new ComboBox<>();
+        cbProcessoProdutivo.getItems().addAll("1: Não possui equipamentos", "2: Equipamentos insuficientes", "3: Equipamentos adequados", "4: Equipamentos com conformidade legal");
+        grid.add(lblProcessoProdutivo, 0, 7);
+        grid.add(cbProcessoProdutivo, 1, 7);
+
+        // Mercado
+        Label lblIdentidadeVisual = new Label("Identidade Visual:");
+        ComboBox<String> cbIdentidadeVisual = new ComboBox<>();
+        cbIdentidadeVisual.getItems().addAll("1: Não possui logomarca", "2: Logomarca precisa ser redefinida", "3: Logomarca definida, mas sem embalagens", "4: Logomarca e embalagens definidas");
+        grid.add(lblIdentidadeVisual, 0, 8);
+        grid.add(cbIdentidadeVisual, 1, 8);
+
+        // Adicionando um botão para salvar os dados
+        Button btnSalvar = new Button("Salvar Monitoramento");
         btnSalvar.setOnAction(e -> {
-            // Exibindo confirmação
-            Label successLabel = new Label("Monitoramento para " + empresa + " registrado com sucesso!");
-            successLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;"); // Estilo opcional para destacar a mensagem
+            // Aqui você pode salvar os dados e realizar ações necessárias
+            Label successLabel = new Label("Monitoramento registrado com sucesso!");
+            successLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
             subMenuPanel.getChildren().add(successLabel);
         });
 
-        grid.add(lblDataHora, 0, 0);
-        grid.add(dataHora, 1, 0);
-        grid.add(lblDocumento, 0, 1);
-        grid.add(btnUpload, 1, 1);
-        grid.add(btnSalvar, 1, 2);
+        grid.add(btnSalvar, 1, 9);
 
-        subMenuPanel.getChildren().add(grid); // Adiciona o grid à área de subMenu
+        subMenuPanel.getChildren().add(grid);
     }
 }
