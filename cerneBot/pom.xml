@@ -15,7 +15,8 @@
 
     <build>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
-
+        <testSourceDirectory>${project.basedir}/tests</testSourceDirectory>
+        
         <plugins>
             <!-- Plugin de compilação -->
             <plugin>
@@ -32,7 +33,7 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
+                <version>0.0.5</version>
                 <executions>
                     <execution>
                         <goals>
@@ -41,11 +42,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>src.Main</mainClass> <!-- Ajuste para o caminho da sua classe Main -->
+                    <mainClass>src.Main</mainClass> <!-- ajuste para o caminho da sua classe Main -->
                     <jvmArgs>
                         <!-- Configura o caminho correto para as dependências JavaFX -->
                         <arg>--module-path</arg>
-                        <arg>${JAVAFX_PATH}</arg>
+                        <arg>/opt/javafx-21/lib</arg>
                         <arg>--add-modules</arg>
                         <arg>javafx.controls,javafx.fxml</arg>
                     </jvmArgs>
