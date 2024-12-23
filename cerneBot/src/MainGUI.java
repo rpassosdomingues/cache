@@ -50,7 +50,7 @@ public class MainGUI extends Application {
         splitPane.getItems().addAll(controlPanel, subMenuPanel);
 
         // Adicionando o SplitPane à cena
-        Scene scene = new Scene(splitPane, 1200, 600); // Defina o tamanho da janela conforme necessário
+        Scene scene = new Scene(splitPane, 1200, 900); // Defina o tamanho da janela conforme necessário
         primaryStage.setScene(scene);
         primaryStage.show(); // Mostra a janela
     }
@@ -62,7 +62,7 @@ public class MainGUI extends Application {
         adicionarBotao("Registrar Rodada de Monitoramento", e -> abrirMonitoramento());
         adicionarBotao("Reservar Sala", e -> abrirReservaSala());
         adicionarBotao("Solicitar Fabricação de Peça", e -> solicitarFabricacaoPecas());
-        adicionarBotao("Identificar Prática Chave", e -> abrirBuscaPraticasChave());
+        adicionarBotao("Identificar Prática Chave", e -> identificarPraticasChave());
         adicionarBotao("Sair", e -> System.exit(0));
     }
 
@@ -480,7 +480,7 @@ public class MainGUI extends Application {
     }
 
     // Janela de Busca de Práticas-Chave
-    private void abrirBuscaPraticasChave() {
+    private void identificarPraticasChave() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
 
