@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -31,23 +32,8 @@ public class Evento {
     private VBox subMenuPanel;
 
     // Construtor
-    public Evento(String nomeProjeto, String acaoExecutada, String nomeEvento, String local,
-                  LocalDate dia, LocalTime horarioInicio, LocalTime horarioTermino, String assunto) {
-        // Validação: o horário de término deve ser após o horário de início
-        if (horarioTermino.isBefore(horarioInicio)) {
-            throw new IllegalArgumentException("O horário de término deve ser após o horário de início.");
-        }
-        this.nomeProjeto = nomeProjeto;
-        this.acaoExecutada = acaoExecutada;
-        this.nomeEvento = nomeEvento;
-        this.local = local;
-        this.dia = dia;
-        this.horarioInicio = horarioInicio;
-        this.horarioTermino = horarioTermino;
-        this.assunto = assunto;
-
-        // Inicializa o painel de submenu
-        this.subMenuPanel = new VBox();
+    public Evento(VBox subMenuPanel) {
+        this.subMenuPanel = subMenuPanel;
     }
 
     // Getters e Setters
@@ -120,6 +106,10 @@ public class Evento {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
         
+        // Centraliza a interface
+        subMenuPanel.setAlignment(Pos.CENTER);
+
+        // Título
         Label titleLabel = new Label("Agendar Evento");
         titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;"); // Estilo do título
         subMenuPanel.getChildren().add(titleLabel); // Adiciona o título ao painel
@@ -129,6 +119,7 @@ public class Evento {
         grid.setVgap(10);
         grid.setHgap(10);
 
+        // Campos de entrada
         Label lblNome = new Label("Nome do Evento:");
         TextField txtNome = new TextField();
 
