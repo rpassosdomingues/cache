@@ -1,24 +1,41 @@
 package src;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 public class Monitoramento {
     private EmpresaIncubada empresaIncubada;
     private LocalDateTime dataHora;
     private List<String> documentosPendentes; // Lista de documentos pendentes
-    private String arquivoExcel; // Nome ou caminho do arquivo Excel com dados de notas, evolução, etc.
+    private String arquivo; // Nome ou caminho do arquivo Excel com dados de notas, evolução, etc.
 
     // Lista estática para armazenar os monitoramentos
     private static List<Monitoramento> monitoramentos = new ArrayList<>();
 
+    // Painel do submenu (declarado como variável de instância)
+    private VBox subMenuPanel;
+
     // Construtor
-    public Monitoramento(EmpresaIncubada empresaIncubada, LocalDateTime dataHora, List<String> documentosPendentes, String arquivoExcel) {
+    public Monitoramento(EmpresaIncubada empresaIncubada, LocalDateTime dataHora, List<String> documentosPendentes, String arquivo) {
         this.empresaIncubada = empresaIncubada;
         this.dataHora = dataHora;
         this.documentosPendentes = documentosPendentes;
-        this.arquivoExcel = arquivoExcel;
+        this.arquivo = arquivo;
+
+        // Inicializa o painel de submenu
+        this.subMenuPanel = new VBox();
     }
 
     // Getters
@@ -34,8 +51,8 @@ public class Monitoramento {
         return documentosPendentes;
     }
 
-    public String getArquivoExcel() {
-        return arquivoExcel;
+    public String getArquivo() {
+        return arquivo;
     }
 
     // Janela de Registro de Rodade de Monitoramento

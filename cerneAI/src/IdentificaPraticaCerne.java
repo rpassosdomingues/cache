@@ -18,7 +18,7 @@ public class IdentificaPraticaCerne {
      *
      * @return A VBox containing the tag selection controls.
      */
-    public static VBox createTagSelectionPanel() {
+    public static VBox criaPainelSelecaoTags() {
         VBox tagPanel = new VBox(10);
         tagPanel.setAlignment(Pos.TOP_LEFT);
 
@@ -44,7 +44,7 @@ public class IdentificaPraticaCerne {
         }
 
         // Botão para pesquisar as práticas chave associadas às tags selecionadas
-        Button identificaPraticaCerne = new Button("Search Key Practices");
+        Button identificaPraticaCerne = new Button("Sugere Prática Cerne");
         identificaPraticaCerne.setOnAction(e -> {
             selectedTags.clear();
             grid.getChildren().stream()

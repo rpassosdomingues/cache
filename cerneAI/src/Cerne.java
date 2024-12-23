@@ -82,7 +82,7 @@ public class Cerne {
 
     // Método auxiliar para abrir a tela de seleção de tags
     private void abrePainelSelecaoTags(Label titleLabel, String acao, String abordagem, String participantes) {
-        VBox painelSelecaoTags = SearchKeyPractices.createTagSelectionPanel();
+        VBox painelSelecaoTags = IdentificaPraticaCerne.criaPainelSelecaoTags();
 
         // Adiciona a funcionalidade de salvar as informações na lista final
         Button btnRegistrarPraticaCerne = new Button("Registrar Prática-Chave");

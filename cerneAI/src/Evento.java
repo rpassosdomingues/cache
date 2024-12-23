@@ -5,12 +5,14 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 public class Evento {
     private String nomeProjeto;
@@ -24,6 +26,9 @@ public class Evento {
 
     // Lista estática para armazenar todos os eventos
     private static List<Evento> eventos = new ArrayList<>();
+
+    // Painel do submenu (declarado como variável de instância)
+    private VBox subMenuPanel;
 
     // Construtor
     public Evento(String nomeProjeto, String acaoExecutada, String nomeEvento, String local,
@@ -40,6 +45,9 @@ public class Evento {
         this.horarioInicio = horarioInicio;
         this.horarioTermino = horarioTermino;
         this.assunto = assunto;
+
+        // Inicializa o painel de submenu
+        this.subMenuPanel = new VBox();
     }
 
     // Getters e Setters
@@ -108,7 +116,7 @@ public class Evento {
     }
 
     // Janela de Agendamento de Evento
-    private void agendaEvento() {
+    public VBox agendaEvento() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
         
@@ -202,5 +210,6 @@ public class Evento {
         grid.add(btnSalvar, 1, 6);
 
         subMenuPanel.getChildren().add(grid); // Adiciona o grid à área de subMenu
+        return subMenuPanel; // Retorna o painel
     }
 }
