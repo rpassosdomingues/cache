@@ -37,7 +37,7 @@ public class ReservaSala extends Application {
         reservaSala();
     }
 
-    private void reservaSala() {
+    public void reservaSala() {
         Stage primaryStage = new Stage();
         primaryStage.setTitle("Sistema de Reservas de Salas");
 
