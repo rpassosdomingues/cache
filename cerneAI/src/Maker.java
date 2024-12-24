@@ -39,9 +39,22 @@ public class Maker {
     // Painel do submenu (declarado como variável de instância)
     private VBox subMenuPanel;
 
-    // Construtor
+    // Construtor para o painel com VBox
     public Maker(VBox subMenuPanel) {
         this.subMenuPanel = subMenuPanel;
+    }
+
+    // Construtor para criar uma solicitação de peça sem o VBox
+    public Maker(String solicitante, String campus, String areaOrigem, String material, String equipamento, LocalDateTime dataSolicitacao, String status, String andamento, String conclusao) {
+        this.solicitante = solicitante;
+        this.campus = campus;
+        this.areaOrigem = areaOrigem;
+        this.material = material;
+        this.equipamento = equipamento;
+        this.dataSolicitacao = dataSolicitacao;
+        this.status = status;
+        this.andamento = andamento;
+        this.conclusao = conclusao;
     }
 
     // Getters e Setters
