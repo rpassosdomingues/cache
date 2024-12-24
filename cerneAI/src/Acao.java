@@ -1,14 +1,10 @@
 package src;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.input.KeyEvent;
 
 import java.time.LocalDate;
 
@@ -16,15 +12,26 @@ public class Acao {
 
     private VBox subMenuPanel;
 
+    // Atributos da ação
+    private String nomeAcao;
+    private String descricao;
+    private String local;
+    private Integer participantes;
+    private LocalDate dia;
+    private String horarioInicio;
+    private String horarioTermino;
+    private String assunto;
+    private CAEX projetoVinculado;
+
     // Construtor
     public Acao(VBox subMenuPanel) {
         this.subMenuPanel = subMenuPanel;
     }
 
     // Método para cadastrar uma nova ação via interface gráfica
-    public void cadastraAcao() {
+    public void registraAcao() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
-        subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
+        subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Estilo de borda e padding
 
         Label titleLabel = new Label("Cadastrar Ação");
         titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;"); // Estilo do título
@@ -45,13 +52,13 @@ public class Acao {
         Label lblLocal = new Label("Local da Ação:");
         TextField txtLocal = new TextField();
 
-        Label lblParticipantes = new Label("Número de Participantes da Ação:");
+        Label lblParticipantes = new Label("Número de Participantes:");
         TextField txtParticipantes = new TextField();
 
-        // Adiciona validação para aceitar apenas números inteiros
+        // Validação para aceitar apenas números inteiros
         txtParticipantes.addEventFilter(KeyEvent.KEY_TYPED, event -> {
             if (!Character.isDigit(event.getCharacter().charAt(0))) {
-                event.consume(); // Impede a entrada de caracteres não numéricos
+                event.consume();
             }
         });
 
@@ -70,56 +77,39 @@ public class Acao {
         // ComboBox para selecionar o projeto vinculado à ação
         Label lblProjetoVinculado = new Label("Selecionar Projeto:");
         ComboBox<CAEX> comboBoxProjeto = new ComboBox<>();
-        comboBoxProjeto.getItems().setAll(CAEX.values()); // Adiciona todos os projetos CAEX à lista
+        comboBoxProjeto.getItems().setAll(CAEX.values());
         comboBoxProjeto.setPromptText("Selecione um Projeto");
 
         // Botão para salvar a ação
         Button btnSalvar = new Button("Salvar");
         btnSalvar.setOnAction(e -> {
-            String nomeAcao = txtNomeAcao.getText();
-            String descricao = txtDescricao.getText();
-            String local = txtLocal.getText();
-            Integer participantes = null;
+            // Captura e valida os dados inseridos pelo usuário
+            nomeAcao = txtNomeAcao.getText();
+            descricao = txtDescricao.getText();
+            local = txtLocal.getText();
 
-            // Verifica se o campo de participantes foi preenchido com um número válido
             try {
                 participantes = Integer.parseInt(txtParticipantes.getText());
             } catch (NumberFormatException ex) {
-                // Caso o número não seja válido, exibe uma mensagem de erro
-                Label errorLabel = new Label("O número de participantes deve ser um valor inteiro válido!");
-                errorLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                subMenuPanel.getChildren().add(errorLabel);
-                return; // Interrompe o cadastro se o número for inválido
+                exibirMensagemErro("O número de participantes deve ser um valor inteiro válido!");
+                return;
             }
 
-            LocalDate dia = txtDia.getValue();
-            String horarioInicio = txtHorarioInicio.getText();
-            String horarioTermino = txtHorarioTermino.getText();
-            String assunto = txtAssunto.getText();
-            CAEX projetoVinculado = comboBoxProjeto.getValue();
+            dia = txtDia.getValue();
+            horarioInicio = txtHorarioInicio.getText();
+            horarioTermino = txtHorarioTermino.getText();
+            assunto = txtAssunto.getText();
+            projetoVinculado = comboBoxProjeto.getValue();
 
-            // Verifica se todos os campos foram preenchidos
-            if (nomeAcao.isEmpty() || descricao.isEmpty() || local.isEmpty() || dia == null || horarioInicio.isEmpty() || 
+            // Verifica se todos os campos obrigatórios foram preenchidos
+            if (nomeAcao.isEmpty() || descricao.isEmpty() || local.isEmpty() || dia == null || horarioInicio.isEmpty() ||
                 horarioTermino.isEmpty() || assunto.isEmpty() || projetoVinculado == null) {
-                Label errorLabel = new Label("Todos os campos são obrigatórios!");
-                errorLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                subMenuPanel.getChildren().add(errorLabel);
+                exibirMensagemErro("Todos os campos são obrigatórios!");
             } else {
-                // Cria a ação e vincula ao projeto selecionado
-                Acao novaAcao = new Acao(subMenuPanel);
-                novaAcao.setNomeAcao(nomeAcao);
-                novaAcao.setDescricao(descricao);
-                novaAcao.setLocal(local);
-                novaAcao.setDia(dia.toString());
-                novaAcao.setHorarioInicio(horarioInicio);
-                novaAcao.setHorarioTermino(horarioTermino);
-                novaAcao.setAssunto(assunto);
-                novaAcao.setProjetoVinculado(projetoVinculado);
+                // Exibe mensagem de sucesso
+                exibirMensagemSucesso("Ação cadastrada com sucesso!");
 
-                // Exibe a mensagem de sucesso
-                Label successLabel = new Label("Ação cadastrada com sucesso!");
-                successLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-                subMenuPanel.getChildren().add(successLabel);
+                // Aqui você pode implementar a lógica adicional, como salvar em um banco de dados ou exibir a ação cadastrada.
             }
         });
 
@@ -145,5 +135,19 @@ public class Acao {
         grid.add(btnSalvar, 1, 9);
 
         subMenuPanel.getChildren().add(grid); // Adiciona o grid à área de subMenu
+    }
+
+    // Exibe uma mensagem de erro
+    private void exibirMensagemErro(String mensagem) {
+        Label errorLabel = new Label(mensagem);
+        errorLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+        subMenuPanel.getChildren().add(errorLabel);
+    }
+
+    // Exibe uma mensagem de sucesso
+    private void exibirMensagemSucesso(String mensagem) {
+        Label successLabel = new Label(mensagem);
+        successLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+        subMenuPanel.getChildren().add(successLabel);
     }
 }

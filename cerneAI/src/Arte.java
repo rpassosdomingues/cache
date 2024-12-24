@@ -1,30 +1,33 @@
 package src;
 
-import java.time.LocalDate; // Importa a classe LocalDate
-import java.time.LocalTime; // Importa a classe LocalTime
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 public class Arte extends DICOM {
-    private String instagram; // Pergunta sobre Instagram
-    private String linkedin;  // Pergunta sobre LinkedIn
-    private boolean artePronta; // Indica se a arte já está pronta
-    private boolean legendaPronta; // Indica se a legenda já está pronta
-    private List<String> arteAnexo; // Lista para anexar arte
-    private List<String> legendaAnexo; // Lista para anexar legenda
+    private String instagram;
+    private String linkedin;
+    private boolean artePronta;
+    private boolean legendaPronta;
+    private String legenda;
+    private List<String> arteAnexos;
+    private VBox subMenuPanel;
 
     // Construtor
-    public Arte(String nomeProjeto, String acaoExecutada, String nomeEvento,
-                String local, LocalDate dia, LocalTime horarioInicio, LocalTime horarioTermino, String assunto,
-                String modo, String motivo, String depoimento,
-                String instagram, String linkedin, boolean artePronta, boolean legendaPronta) {
-        super(nomeProjeto, acaoExecutada, nomeEvento, local, dia, horarioInicio, horarioTermino, assunto, modo, motivo, depoimento);
-        this.instagram = instagram;
-        this.linkedin = linkedin;
-        this.artePronta = artePronta;
-        this.legendaPronta = legendaPronta;
-        this.arteAnexo = new ArrayList<>(); // Inicializa a lista de anexos de arte
-        this.legendaAnexo = new ArrayList<>(); // Inicializa a lista de anexos de legenda
+    public Arte(VBox subMenuPanel) {
+        super(subMenuPanel);
+        this.subMenuPanel = subMenuPanel;
+        this.arteAnexos = new ArrayList<>();
     }
 
     // Getters e Setters
@@ -60,31 +63,107 @@ public class Arte extends DICOM {
         this.legendaPronta = legendaPronta;
     }
 
-    public List<String> getArteAnexo() {
-        return arteAnexo;
+    public String getLegenda() {
+        return legenda;
     }
 
-    public void setArteAnexo(List<String> arteAnexo) {
-        this.arteAnexo = arteAnexo;
+    public void setLegenda(String legenda) {
+        this.legenda = legenda;
     }
 
-    public List<String> getLegendaAnexo() {
-        return legendaAnexo;
+    public List<String> getArteAnexos() {
+        return arteAnexos;
     }
 
-    public void setLegendaAnexo(List<String> legendaAnexo) {
-        this.legendaAnexo = legendaAnexo;
+    public void addArteAnexo(String path) {
+        arteAnexos.add(path);
     }
 
-    // Metodo para adicionar um anexo de arte
-    public void adicionaArte(String arte) {
-        arteAnexo.add(arte);
-        System.out.println("Anexo de arte adicionado com sucesso!");
+    // Interface gráfica para gerenciamento da arte
+    public VBox gerenciaArte() {
+        subMenuPanel.getChildren().clear();
+        subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;");
+        subMenuPanel.setAlignment(Pos.TOP_CENTER);
+
+        // Título
+        Label titleLabel = new Label("Gerenciar Arte de Divulgação");
+        titleLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        subMenuPanel.getChildren().add(titleLabel);
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(15));
+        grid.setVgap(10);
+        grid.setHgap(10);
+
+        // Campos para Instagram e LinkedIn
+        Label lblInstagram = new Label("Perfil Instagram:");
+        TextField txtInstagram = new TextField(instagram);
+        Label lblLinkedin = new Label("Perfil LinkedIn:");
+        TextField txtLinkedin = new TextField(linkedin);
+
+        // Checkbox para arte e legenda prontas
+        CheckBox chkArtePronta = new CheckBox("Arte pronta");
+        chkArtePronta.setSelected(artePronta);
+
+        CheckBox chkLegendaPronta = new CheckBox("Legenda pronta");
+        chkLegendaPronta.setSelected(legendaPronta);
+
+        // Campo de legenda
+        Label lblLegenda = new Label("Legenda:");
+        TextArea txtLegenda = new TextArea(legenda);
+        txtLegenda.setPrefHeight(100);
+
+        // Botão para anexar arte
+        Button btnAnexarArte = new Button("Anexar Arte");
+        btnAnexarArte.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Selecionar Arte");
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Imagens", "*.png", "*.jpg", "*.jpeg")
+            );
+            String selectedFile = fileChooser.showOpenDialog(subMenuPanel.getScene().getWindow()) != null
+                ? fileChooser.showOpenDialog(subMenuPanel.getScene().getWindow()).getAbsolutePath()
+                : null;
+            if (selectedFile != null) {
+                addArteAnexo(selectedFile);
+                Label successLabel = new Label("Arte anexada: " + selectedFile);
+                successLabel.setStyle("-fx-text-fill: green;");
+                subMenuPanel.getChildren().add(successLabel);
+            }
+        });
+
+        // Botão para salvar alterações
+        Button btnSalvar = new Button("Salvar Alterações");
+        btnSalvar.setOnAction(e -> {
+            instagram = txtInstagram.getText();
+            linkedin = txtLinkedin.getText();
+            artePronta = chkArtePronta.isSelected();
+            legendaPronta = chkLegendaPronta.isSelected();
+            legenda = txtLegenda.getText();
+
+            Label successLabel = new Label("Dados salvos com sucesso!");
+            successLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            subMenuPanel.getChildren().add(successLabel);
+        });
+
+        // Adicionando componentes ao GridPane
+        grid.add(lblInstagram, 0, 0);
+        grid.add(txtInstagram, 1, 0);
+        grid.add(lblLinkedin, 0, 1);
+        grid.add(txtLinkedin, 1, 1);
+        grid.add(chkArtePronta, 0, 2);
+        grid.add(chkLegendaPronta, 1, 2);
+        grid.add(lblLegenda, 0, 3);
+        grid.add(txtLegenda, 1, 3, 2, 1);
+        grid.add(btnAnexarArte, 0, 4);
+        grid.add(btnSalvar, 1, 4);
+
+        subMenuPanel.getChildren().add(grid);
+        return subMenuPanel;
     }
 
-    // Metodo para adicionar um anexo de legenda
-    public void adicionaLegenda(String legenda) {
-        legendaAnexo.add(legenda);
-        System.out.println("Anexo de legenda adicionado com sucesso!");
+    // Método para processar imagem
+    public Image processarImagem(String path, int largura, int altura) {
+        return new Image("file:" + path, largura, altura, false, true);
     }
 }

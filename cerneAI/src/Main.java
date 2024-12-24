@@ -186,6 +186,9 @@ public class Main extends Application {
         // Instancia as classes para configurar as interfaces
         Projeto cadastraProjeto = new Projeto(subMenuPanel);
         Evento agendaEvento = new Evento(subMenuPanel);
+        Acao registraAcao = new Acao(subMenuPanel);
+        DICOM escreveMateria = new DICOM(subMenuPanel);
+        Arte gerenciaArte = new Arte(subMenuPanel);
         Monitoramento registraRodadaMonitoramento = new Monitoramento(subMenuPanel);
         ReservaSala reservaSala = new ReservaSala(subMenuPanel);
         Maker solicitaServicosMaker = new Maker(subMenuPanel);
@@ -194,6 +197,9 @@ public class Main extends Application {
         // Chama os métodos de configuração das interfaces incorporadas
         cadastraProjeto.cadastraProjeto();
         agendaEvento.agendaEvento();
+        registraAcao.registraAcao();
+        escreveMateria.escreveMateria();
+        gerenciaArte.gerenciaArte();
         registraRodadaMonitoramento.registraRodadaMonitoramento();
         reservaSala.reservaSala();
         solicitaServicosMaker.solicitaServicosMaker();
@@ -216,6 +222,18 @@ public class Main extends Application {
         adicionaBotao("Agendar Evento", e -> {
             Evento evento = new Evento(subMenuPanel);
             evento.agendaEvento();
+        });
+        adicionaBotao("Registrar Ação", e -> {
+            Acao acao = new Acao(subMenuPanel);
+            acao.registraAcao();
+        });
+        adicionaBotao("Matéria de Divulgação", e -> {
+            DICOM dicom = new DICOM(subMenuPanel);
+            dicom.escreveMateria();
+        });
+        adicionaBotao("Arte de Divulgação", e -> {
+            Arte arte = new Arte(subMenuPanel);
+            arte.gerenciaArte();
         });
         adicionaBotao("Registrar Rodada de Monitoramento", e -> {
             Monitoramento monitoramento = new Monitoramento(subMenuPanel);

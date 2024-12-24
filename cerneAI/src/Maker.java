@@ -33,19 +33,15 @@ public class Maker {
     private String andamento;
     private String conclusao;
 
+    // Lista de solicitações de peças
+    private List<Maker> pecas = new ArrayList<>();
+
+    // Painel do submenu (declarado como variável de instância)
+    private VBox subMenuPanel;
+
     // Construtor
-    public Maker(String solicitante, String campus, String areaOrigem, String material,
-                            String equipamento, LocalDateTime dataSolicitacao, String status,
-                            String andamento, String conclusao) {
-        this.solicitante = solicitante;
-        this.campus = campus;
-        this.areaOrigem = areaOrigem;
-        this.material = material;
-        this.equipamento = equipamento;
-        this.dataSolicitacao = dataSolicitacao;
-        this.status = status;
-        this.andamento = andamento;
-        this.conclusao = conclusao;
+    public Maker(VBox subMenuPanel) {
+        this.subMenuPanel = subMenuPanel;
     }
 
     // Getters e Setters

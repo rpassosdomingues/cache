@@ -22,6 +22,11 @@ public class ReservaSala extends Application {
     private static final List<Reserva> reservasSalaReuniao = new ArrayList<>();
     private static final List<Reserva> reservasCoworking = new ArrayList<>();
     private LocalDate currentMonth = LocalDate.now(); // Mês atual
+    private VBox subMenuPanel; // Definido como variável de instância
+
+    public ReservaSala(VBox subMenuPanel) {
+        this.subMenuPanel = subMenuPanel; // Atribui o painel passado ao campo
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -29,10 +34,11 @@ public class ReservaSala extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        reservaSala(primaryStage);
+        reservaSala();
     }
 
-    private void reservaSala(Stage primaryStage) {
+    private void reservaSala() {
+        Stage primaryStage = new Stage();
         primaryStage.setTitle("Sistema de Reservas de Salas");
 
         // Layout principal
@@ -204,6 +210,22 @@ public class ReservaSala extends Application {
         TextField duracaoField = new TextField();
         duracaoField.setPromptText("Ex: 2");
 
+        // Pergunta específica para o tipo de sala
+        Label labelTipoReserva = new Label("Tipo de Sala:");
+        ComboBox<String> tipoReservaComboBox = new ComboBox<>();
+        tipoReservaComboBox.getItems().addAll("Coworking", "Sala de Reuniões");
+        
+        // Quando o tipo de reserva for escolhido
+        tipoReservaComboBox.setOnAction(e -> {
+            if ("Coworking".equals(tipoReservaComboBox.getValue())) {
+                Label labelProjetor = new Label("Vai precisar de projetor?");
+                layoutPopup.getChildren().add(labelProjetor);
+            } else if ("Sala de Reuniões".equals(tipoReservaComboBox.getValue())) {
+                Label labelTransmissao = new Label("Vai realizar transmissão ao vivo?");
+                layoutPopup.getChildren().add(labelTransmissao);
+            }
+        });
+
         Button btnConfirmar = new Button("Confirmar Reserva");
         btnConfirmar.setOnAction(e -> {
             // Lógica para confirmar a reserva
@@ -211,9 +233,9 @@ public class ReservaSala extends Application {
             popup.close();
         });
 
-        layoutPopup.getChildren().addAll(labelHoraInicio, horaInicioField, labelDuracao, duracaoField, btnConfirmar);
+        layoutPopup.getChildren().addAll(labelHoraInicio, horaInicioField, labelDuracao, duracaoField, labelTipoReserva, tipoReservaComboBox, btnConfirmar);
 
-        Scene scenePopup = new Scene(layoutPopup, 300, 200);
+        Scene scenePopup = new Scene(layoutPopup, 300, 300);
         popup.setScene(scenePopup);
         popup.show();
     }
@@ -256,9 +278,5 @@ class Reserva {
 
     public String getTipoReserva() {
         return tipoReserva;
-    }
-
-    public boolean isEspecificacao() {
-        return especificacao;
     }
 }
