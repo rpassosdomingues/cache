@@ -183,28 +183,6 @@ public class Main extends Application {
         // Configura a estrutura dividida (painéis à esquerda e direita)
         splitPane.getItems().addAll(controlPanel, subMenuPanel);
 
-        // Instancia as classes para configurar as interfaces
-        Projeto cadastraProjeto = new Projeto(subMenuPanel);
-        Evento agendaEvento = new Evento(subMenuPanel);
-        Acao registraAcao = new Acao(subMenuPanel);
-        DICOM escreveMateria = new DICOM(subMenuPanel);
-        Arte gerenciaArte = new Arte(subMenuPanel);
-        Monitoramento registraRodadaMonitoramento = new Monitoramento(subMenuPanel);
-        ReservaSala reservaSala = new ReservaSala(subMenuPanel);
-        Maker solicitaServicosMaker = new Maker(subMenuPanel);
-        Cerne registraPraticaCerne = new Cerne(subMenuPanel);
-
-        // Chama os métodos de configuração das interfaces incorporadas
-        cadastraProjeto.cadastraProjeto();
-        agendaEvento.agendaEvento();
-        registraAcao.registraAcao();
-        escreveMateria.escreveMateria();
-        gerenciaArte.gerenciaArte();
-        registraRodadaMonitoramento.registraRodadaMonitoramento();
-        reservaSala.reservaSala();
-        solicitaServicosMaker.solicitaServicosMaker();
-        registraPraticaCerne.registraPraticaCerne();
-
         // Configura a cena e a janela
         Scene scene = new Scene(splitPane, 1920, 1200);  // Defina o tamanho da janela conforme necessário
         primaryStage.setScene(scene);
