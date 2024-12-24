@@ -2,11 +2,14 @@ package src;
 
 import src.Projeto;
 import src.Evento;
+import src.Acao;
+import src.DICOM;
+import src.Arte;
 import src.Monitoramento;
 import src.ReservaSala;
 import src.Maker;
-import src.Cerne;
 import src.Praticas;
+import src.Cerne;
 
 import org.neo4j.driver.*;
 import org.neo4j.driver.internal.InternalNode;
@@ -42,9 +45,6 @@ public class Main extends Application {
 
     // Variável de estado para controle do fluxo de botões
     private boolean state = true;
-
-    // Lista de peças (Maker), para futura utilização
-    private ArrayList<Maker> pecas;
 
     // Lista de tags selecionadas para busca de práticas
     private static List<String> selectedTags = new ArrayList<>();
