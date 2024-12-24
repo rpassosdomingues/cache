@@ -137,7 +137,7 @@ public class Maker {
     }
 
     // Janela de Solicitação de Fabricação de Peça
-    private void solicitaServicosMaker() {
+    public void solicitaServicosMaker() {
         subMenuPanel.getChildren().clear(); // Limpa a área de detalhes
         subMenuPanel.setStyle("-fx-border-color: lightgray; -fx-padding: 10;"); // Adiciona uma borda e padding
 
