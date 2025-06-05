@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>BusOn - Horários de Ônibus em Tempo Real</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" />
+<style>
+  /* Reset e básico */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #222;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+  header {
+    background: #1e88e5;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  nav {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  nav button {
+    background: #1565c0;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  nav button:hover,
+  nav button.active {
+    background: #0d47a1;
+    transform: translateY(-2px);
+  }
+  nav button:active {
+    transform: translateY(0);
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 1rem;
+    max-width: 1200px;
+    margin: auto;
+  }
+  #map {
+    flex: 2 1 600px;
+    min-height: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    z-index: 1;
+  }
+  #info {
+    flex: 1 1 300px;
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  #info h2 {
+    margin-bottom: 1rem;
+    color: #1e88e5;
+    font-size: 1.3rem;
+  }
+  #nextBus {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    min-height: 72px;
+    background: #e3f2fd;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #1e88e5;
+  }
+  #schedule-list {
+    list-style: none;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+  #schedule-list li {
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  #schedule-list li:hover {
+    background: #e3f2fd;
+    transform: translateX(5px);
+  }
+  .time-badge {
+    background: #1e88e5;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  #locationStatus {
+    margin-top: auto;
+    font-size: 0.9rem;
+    color: #555;
+    padding: 0.5rem;
+    background: #f5f5f5;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .location-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .location-actions button {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .search-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .search-container input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+  .search-container button {
+    padding: 0.5rem 1rem;
+  }
+  @media (max-width: 900px) {
+    main {
+      flex-direction: column;
+      align-items: center;
+    }
+    #map, #info {
+      flex: unset;
+      width: 100%;
+      min-height: 300px;
+    }
+    #schedule-list {
+      max-height: 200px;
+    }
+  }
+
+  /* Animação de loading */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .loading {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 0.5rem;
+  }
+</style>
+</head>
+<body>
+<header>
+  BusOn - Horários de Ônibus em Tempo Real
+  <nav>
+    <button id="btn-location" onclick="getUserLocation()">
+      <span class="icon">📍</span> Minha Localização
+    </button>
+    <button id="btn-ida" class="active" onclick="showRoute('Terminal-JardimAlvorada')">
+      <span class="icon">➡️</span> Terminal → Jardim Alvorada
+    </button>
+    <button id="btn-volta" onclick="showRoute('JardimAlvorada-Terminal')">
+      <span class="icon">⬅️</span> Jardim Alvorada → Terminal
+    </button>
+    <button id="btn-campus" onclick="showRoute('Terminal-Campus')">
+      <span class="icon">🏫</span> Terminal → Campus
+    </button>
+  </nav>
+</header>
+
+<main>
+  <div id="map"></div>
+  <section id="info">
+    <h2>Próximo Ônibus</h2>
+    <div id="nextBus">Selecione uma linha ou use sua localização para ver os horários.</div>
+    <h2>Horários de Partida</h2>
+    <ul id="schedule-list"></ul>
+    
+    <div class="search-container">
+      <input type="text" id="cepInput" placeholder="Digite seu CEP">
+      <button id="btn-cep" onclick="searchByCEP()">Buscar</button>
+    </div>
+    
+    <div id="locationStatus">Clique em "Minha Localização" para começar.</div>
+    <div class="location-actions">
+      <button id="btn-confirm" class="secondary" onclick="confirmLocation()" disabled>Confirmar Localização</button>
+    </div>
+  </section>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.1/dist/leaflet.js"></script>
+<script>
+  // Dados das linhas de ônibus (do seu arquivo horarios.js)
+  const busLines = {
+    'Terminal-JardimAlvorada': {
+      origem: 'Terminal Urbano',
+      destino: 'Jardim Alvorada',
+      horarios: [
+        '6:15', '7:15', '8:15', '9:15', '10:15', '11:15',
+        '12:15', '13:15', '14:15', '15:15', '16:15', '17:15',
+        '18:15', '19:15', '20:15', '21:15', '22:15', '23:00'
+      ],
+      paradas: [
+        { lat: -21.425, lng: -45.937, name: "Terminal Urbano" },
+        { lat: -21.426, lng: -45.938, name: "Av. Principal" },
+        { lat: -21.427, lng: -45.940, name: "Jardim Alvorada" }
+      ]
+    },
+    'JardimAlvorada-Terminal': {
+      origem: 'Jardim Alvorada',
+      destino: 'Terminal Urbano',
+      horarios: [
+        '6:30', '7:30', '8:30', '9:30', '10:30', '11:30',
+        '12:30', '13:30', '14:30', '15:30', '16:30', '17:30',
+        '18:30', '19:30', '20:30', '21:30', '22:30'
+      ],
+      paradas: [
+        { lat: -21.427, lng: -45.940, name: "Jardim Alvorada" },
+        { lat: -21.426, lng: -45.938, name: "Av. Principal" },
+        { lat: -21.425, lng: -45.937, name: "Terminal Urbano" }
+      ]
+    },
+    'Terminal-Campus': {
+      origem: 'Terminal Urbano',
+      destino: 'Campus',
+      horarios: [
+        '6:45', '7:45', '8:45', '9:45', '10:45', '11:45',
+        '12:45', '13:45', '14:45', '15:45', '16:45', '17:45',
+        '18:45', '19:45', '20:45', '21:45'
+      ],
+      paradas: [
+        { lat: -21.425, lng: -45.937, name: "Terminal Urbano" },
+        { lat: -21.424, lng: -45.935, name: "Rua da Universidade" },
+        { lat: -21.423, lng: -45.933, name: "Campus Universitário" }
+      ]
+    },
+    'Campus-Terminal': {
+      origem: 'Campus',
+      destino: 'Terminal Urbano',
+      horarios: [
+        '7:05', '8:05', '9:05', '10:05', '11:05', '12:05',
+        '13:05', '14:05', '15:05', '16:05', '17:05', '18:05',
+        '19:05', '20:05', '21:05', '22:05'
+      ],
+      paradas: [
+        { lat: -21.423, lng: -45.933, name: "Campus Universitário" },
+        { lat: -21.424, lng: -45.935, name: "Rua da Universidade" },
+        { lat: -21.425, lng: -45.937, name: "Terminal Urbano" }
+      ]
+    },
+    'Terminal-Pinheirinho': {
+      origem: 'Terminal Urbano',
+      destino: 'Pinheirinho',
+      horarios: [
+        '4:50', '5:15', '6:15', '7:15', '8:15', '9:15', '10:15',
+        '11:15', '12:15', '13:15', '14:15', '15:15', '16:15',
+        '17:15', '18:15', '19:15', '21:15', '22:15'
+      ],
+      paradas: [
+        { lat: -21.425, lng: -45.937, name: "Terminal Urbano" },
+        { lat: -21.426, lng: -45.939, name: "Centro Comercial" },
+        { lat: -21.428, lng: -45.942, name: "Pinheirinho" }
+      ]
+    }
+  };
+
+  // Inicializa mapa
+  const map = L.map("map").setView([-21.425, -45.937], 13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  // Variáveis globais
+  let markers = [];
+  let userMarker = null;
+  let currentLine = 'Terminal-JardimAlvorada';
+  let userLocation = null;
+  let selectedStop = null;
+
+  // Função para limpar marcadores antigos
+  function clearMarkers() {
+    markers.forEach((m) => map.removeLayer(m));
+    markers = [];
+  }
+
+  // Mostrar rota no mapa e horários
+  function showRoute(lineId) {
+    if (!busLines[lineId]) return;
+    
+    currentLine = lineId;
+    clearMarkers();
+    
+    // Atualizar botões ativos
+    document.querySelectorAll('nav button').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    document.getElementById(`btn-${lineId.split('-')[0].toLowerCase()}`)?.classList.add('active');
+    
+    // Adicionar marcadores das paradas
+    busLines[lineId].paradas.forEach((stop, i) => {
+      const marker = L.marker([stop.lat, stop.lng], {
+        icon: L.divIcon({
+          className: 'bus-stop-icon',
+          html: '🚏',
+          iconSize: [25, 25]
+        })
+      })
+      .addTo(map)
+      .bindPopup(`<b>${stop.name}</b><br>Linha: ${busLines[lineId].origem} → ${busLines[lineId].destino}`)
+      .on('click', () => {
+        selectedStop = stop;
+        updateNextBusInfo();
+      });
+      
+      markers.push(marker);
+    });
+
+    // Atualizar lista de horários
+    updateScheduleList();
+    
+    // Se já tiver localização do usuário, atualizar informações
+    if (userLocation) {
+      findNearestStop();
+    }
+  }
+
+  // Atualiza a lista de horários
+  function updateScheduleList() {
+    const scheduleList = document.getElementById("schedule-list");
+    scheduleList.innerHTML = "";
+    
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    
+    busLines[currentLine].horarios.forEach(time => {
+      const [h, m] = time.split(':').map(Number);
+      const li = document.createElement("li");
+      
+      // Destacar horários futuros
+      const isFuture = h > currentHour || (h === currentHour && m >= currentMinute);
+      
+      li.innerHTML = `
+        <span>${time}</span>
+        ${isFuture ? '<span class="time-badge">Próximo</span>' : ''}
+      `;
+      
+      scheduleList.appendChild(li);
+    });
+  }
+
+  // Busca localização do usuário
+  function getUserLocation() {
+    const btn = document.getElementById("btn-location");
+    const statusEl = document.getElementById("locationStatus");
+    
+    if (!navigator.geolocation) {
+      statusEl.textContent = "Geolocalização não suportada pelo seu navegador.";
+      return;
+    }
+    
+    btn.innerHTML = '<span class="loading"></span> Buscando...';
+    btn.disabled = true;
+    statusEl.textContent = "Detectando sua localização...";
+    
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userLocation = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: pos.coords.accuracy
+        };
+        
+        // Atualizar marcador do usuário
+        updateUserMarker();
+        
+        // Encontrar parada mais próxima
+        findNearestStop();
+        
+        statusEl.textContent = `Localização detectada (precisão: ${userLocation.accuracy.toFixed(0)}m)`;
+        btn.innerHTML = '<span class="icon">📍</span> Minha Localização';
+        btn.disabled = false;
+        
+        // Habilitar botão de confirmar
+        document.getElementById("btn-confirm").disabled = false;
+      },
+      (error) => {
+        console.error("Erro ao obter localização:", error);
+        statusEl.textContent = "Não foi possível obter sua localização.";
+        btn.innerHTML = '<span class="icon">📍</span> Minha Localização';
+        btn.disabled = false;
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  // Atualiza o marcador do usuário no mapa
+  function updateUserMarker() {
+    if (!userLocation) return;
+    
+    if (userMarker) {
+      map.removeLayer(userMarker);
+    }
+    
+    userMarker = L.circleMarker([userLocation.lat, userLocation.lng], {
+      radius: 8,
+      color: "#1e88e5",
+      fillColor: "#1e88e5",
+      fillOpacity: 0.8,
+      weight: 2,
+    })
+    .addTo(map)
+    .bindPopup("Sua localização")
+    .openPopup();
+    
+    // Centralizar mapa na localização do usuário
+    map.setView([userLocation.lat, userLocation.lng], 15);
+  }
+
+  // Encontra a parada mais próxima do usuário
+  function findNearestStop() {
+    if (!userLocation || !busLines[currentLine]) return;
+    
+    let minDistance = Infinity;
+    let nearestStop = null;
+    
+    busLines[currentLine].paradas.forEach(stop => {
+      const distance = calculateDistance(
+        userLocation.lat, userLocation.lng,
+        stop.lat, stop.lng
+      );
+      
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestStop = stop;
+      }
+    });
+    
+    selectedStop = nearestStop;
+    updateNextBusInfo();
+  }
+
+  // Atualiza as informações do próximo ônibus
+  function updateNextBusInfo() {
+    if (!selectedStop || !busLines[currentLine]) return;
+    
+    const nextBusEl = document.getElementById("nextBus");
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    
+    // Encontrar próximo horário
+    let nextTime = null;
+    for (const time of busLines[currentLine].horarios) {
+      const [h, m] = time.split(':').map(Number);
+      if (h > currentHour || (h === currentHour && m >= currentMinute)) {
+        nextTime = time;
+        break;
+      }
+    }
+    
+    if (nextTime) {
+      const distance = userLocation ? 
+        calculateDistance(
+          userLocation.lat, userLocation.lng,
+          selectedStop.lat, selectedStop.lng
+        ).toFixed(0) : '?';
+      
+      nextBusEl.innerHTML = `
+        <strong>${busLines[currentLine].origem} → ${busLines[currentLine].destino}</strong><br>
+        Próximo ônibus: <strong>${nextTime}</strong><br>
+        Parada: <strong>${selectedStop.name}</strong><br>
+        Distância: <strong>${distance}m</strong>
+      `;
+    } else {
+      nextBusEl.innerHTML = `
+        <strong>${busLines[currentLine].origem} → ${busLines[currentLine].destino}</strong><br>
+        Não há mais ônibus hoje nesta linha.<br>
+        Parada: <strong>${selectedStop.name}</strong>
+      `;
+    }
+  }
+
+  // Busca por CEP
+  async function searchByCEP() {
+    const cepInput = document.getElementById("cepInput");
+    const cep = cepInput.value.replace(/\D/g, '');
+    const statusEl = document.getElementById("locationStatus");
+    const btn = document.getElementById("btn-cep");
+    
+    if (cep.length !== 8) {
+      statusEl.textContent = "Por favor, insira um CEP válido com 8 dígitos.";
+      return;
+    }
+    
+    btn.innerHTML = '<span class="loading"></span> Buscando...';
+    btn.disabled = true;
+    statusEl.textContent = "Buscando localização pelo CEP...";
+    
+    try {
+      // Simulação de busca por CEP - na prática, usar uma API como ViaCEP
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Coordenadas simuladas para o CEP (centro da cidade com pequena variação)
+      userLocation = {
+        lat: -21.425 + (Math.random() * 0.01 - 0.005),
+        lng: -45.937 + (Math.random() * 0.01 - 0.005),
+        accuracy: 100
+      };
+      
+      updateUserMarker();
+      findNearestStop();
+      
+      statusEl.textContent = `Localização estimada pelo CEP ${cepInput.value}`;
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+      statusEl.textContent = "Erro ao buscar localização pelo CEP.";
+    } finally {
+      btn.innerHTML = 'Buscar';
+      btn.disabled = false;
+      document.getElementById("btn-confirm").disabled = false;
+    }
+  }
+
+  // Confirma a localização selecionada
+  function confirmLocation() {
+    if (!selectedStop) return;
+    
+    const statusEl = document.getElementById("locationStatus");
+    statusEl.textContent = `Localização confirmada: ${selectedStop.name}`;
+    
+    // Destaque a parada selecionada
+    markers.forEach(marker => {
+      if (marker.getLatLng().lat === selectedStop.lat && 
+          marker.getLatLng().lng === selectedStop.lng) {
+        marker.setIcon(L.divIcon({
+          className: 'selected-stop-icon',
+          html: '🚏⭐',
+          iconSize: [30, 30]
+        }));
+      }
+    });
+  }
+
+  // Calcula distância entre dois pontos em metros
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // metros
+    const φ1 = lat1 * Math.PI/180;
+    const φ2 = lat2 * Math.PI/180;
+    const Δφ = (lat2-lat1) * Math.PI/180;
+    const Δλ = (lon2-lon1) * Math.PI/180;
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c;
+  }
+
+  // Inicializa a aplicação mostrando a primeira linha
+  showRoute(currentLine);
+</script>
+</body>
+</html>
