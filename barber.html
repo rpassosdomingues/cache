@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💈 Agendamento de Horário</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 1rem; color: #333; }
+  h1 { text-align: center; }
+  form { background: #fff; padding: 1rem; border-radius: 8px; max-width: 400px; margin: 1rem auto; box-shadow: 0 0 10px #ccc; }
+  label { display: block; margin-top: 1rem; font-weight: bold; }
+  input, select { width: 100%; margin-top: 0.5rem; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+  .checkbox-group { display: flex; flex-direction: column; margin-top: 0.5rem; }
+  .checkbox-group label { font-weight: normal; }
+  button { margin-top: 1rem; background: #4CAF50; color: white; border: none; padding: 0.75rem; border-radius: 4px; cursor: pointer; width: 100%; }
+  button:hover { background: #45a049; }
+</style>
+</head>
+<body>
+
+<h1>💈 Agende seu horário</h1>
+
+<form id="formAgendamento">
+  <label for="nomeCliente">Seu nome:</label>
+  <input type="text" id="nomeCliente" required>
+
+  <label>Escolha os serviços:</label>
+  <div class="checkbox-group">
+    <label><input type="checkbox" value="Corte de cabelo 💇‍♂️ (R$30)"> Corte de cabelo 💇‍♂️ (R$30)</label>
+    <label><input type="checkbox" value="Barba 🧔 (R$20)"> Barba 🧔 (R$20)</label>
+    <label><input type="checkbox" value="Combo Corte + Barba ✂️🧔 (R$45)"> Combo Corte + Barba ✂️🧔 (R$45)</label>
+  </div>
+
+  <label for="data">Data desejada:</label>
+  <input type="date" id="data" required>
+
+  <label for="hora">Horário desejado:</label>
+  <input type="time" id="hora" required>
+
+  <button type="button" onclick="enviarAgendamento()">📲 Agendar via WhatsApp</button>
+</form>
+
+<script>
+  function enviarAgendamento() {
+    const nome = document.getElementById('nomeCliente').value.trim();
+    const data = document.getElementById('data').value;
+    const hora = document.getElementById('hora').value;
+    const servicosSelecionados = Array.from(document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked')).map(el => el.value);
+
+    if (!nome || !data || !hora || servicosSelecionados.length === 0) {
+      alert('Por favor, preencha todos os campos e selecione pelo menos um serviço.');
+      return;
+    }
+
+    const texto = 
+`💈 *Novo agendamento!*\n
+👤 *Nome:* ${nome}\n
+📅 *Data:* ${data}\n
+⏰ *Horário:* ${hora}\n
+✂️ *Serviços escolhidos:* \n- ${servicosSelecionados.join('\n- ')}`;
+
+    // Número do WhatsApp do barbeiro
+    const numeroBarbeiro = '5535910140086';
+    const link = `https://wa.me/${numeroBarbeiro}?text=${encodeURIComponent(texto)}`;
+
+    window.open(link, '_blank');
+  }
+</script>
+
+</body>
+</html>
